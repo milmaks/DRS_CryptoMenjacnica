@@ -1,10 +1,12 @@
 <html>
     <head>
-        <title>LogIn
-        </title>
+        <title>LogIn</title>
+        <link rel="stylesheet" href="../static/css/login-style.css">
         <script src="../static/js/jquery-1.11.2.js"></script>
         <script src="../static/js/login.js"></script>
+        <script src="../static/js/register.js"></script>
     </head>
+    <!--
     <body>
         <div>
             <h1>Log In</h1>
@@ -16,5 +18,81 @@
 
               <a href="/register"><button id="register" >Register</button></a>
           </div>
-        </body>
+    </body>
+    -->
+    <body>
+        <div class="container" id="container">
+            <div class="form-container sign-up-container">
+                <form method="post">
+                    <h1>Create Account</h1>
+                    <label class="error-msg" id="id_error"> Err msg </label>
+                    <table style="width:100%">
+                        <tr style="width:100%">
+                            <td style="align-items:left;justify-content: left;">
+                                <input type="text" class="first" placeholder="First name" name="first_name"/>
+                            </td style="align-items:right">
+                            <td>
+                                <input type="text" class="second" placeholder="Last name" name="last_name"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <input type="text" placeholder="Home address" name="address"/>
+                            </td>
+                        </tr>
+                        <tr style="width:100%">
+                            <td style="align-items:left;justify-content: left;">
+                                <input type="text" class="first" placeholder="City" name="town"/>
+                            </td style="align-items:right">
+                            <td>
+                                <input type="text" class="second" placeholder="Country" name="country"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <input type="text" placeholder="Phone number" name="phone_number"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <input type="email" placeholder="Email" name="email"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <input type="password" placeholder="Password" name="password"/>
+                            </td>
+                        </tr>
+                    </table>	
+                    </br>
+                    <button id="butn">Sign Up</button>
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form method="post" id="log_form">
+                    <h1>Sign in</h1>
+                    <label class="error-msg" id="id_error"> Err msg </label>
+                    <input type="email" id="email" name="email" placeholder="Email" required="required"/>
+                    <input type="password" name="password" placeholder="Password" required="required" />
+                    </br>
+                    <button id="login">Sign In</button>
+                </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>To safely keep, buy and sell your crypto with us please login with your personal info</p>
+                        <button class="ghost" id="signIn">Sign In</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hello, Friend!</h1>
+                        <p>Enter your personal details and start your crypto journey with us</p>
+                        <button class="ghost" id="signUp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../static/js/scriptLogIn.js"></script>
+    </body>
 </html>
