@@ -1,4 +1,3 @@
-from os import truncate
 import re
 from flask import Flask, jsonify, request, render_template, url_for, redirect
 from model.Customer import Customer, CustomerSchema
@@ -72,4 +71,4 @@ def register():
 
 
 if __name__ == "__main__":
-    app.run(port=8000, debug=True)
+    app.run(port=8000)
