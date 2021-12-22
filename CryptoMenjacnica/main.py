@@ -6,24 +6,24 @@ from flaskext.mysql import MySQL
 from flask_restful import Api
 from flask_cors import CORS
 from config import db, ma
-#from costumer_db import CostumerTable
+from costumer_db import CostumerTable
 import yaml
+
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-#costumers_database = CostumerTable()
+costumers_database = CostumerTable()
 
-#db_yaml = yaml.safe_load(open("yamls/db.yaml"))
-#mysql = MySQL()
-#app.config['MYSQL_DATABASE_USER'] = db_yaml["mysql_user"]
-#app.config['MYSQL_DATABASE_PASSWORD'] = db_yaml["mysql_password"]
-#app.config['MYSQL_DATABASE_DB'] = db_yaml["mysql_db"]
-#app.config['MYSQL_DATABASE_HOST'] = db_yaml["mysql_host"]
-#mysql.init_app(app)
-#db.init_app(app)
+db_yaml = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 
+mysql = MySQL()
+app.config['MYSQL_DATABASE_USER'] = db_yaml["mysql_user"]
+app.config['MYSQL_DATABASE_PASSWORD'] = db_yaml["mysql_password"]
+app.config['MYSQL_DATABASE_DB'] = db_yaml["mysql_db"]
+app.config['MYSQL_DATABASE_HOST'] = db_yaml["mysql_host"]
+mysql.init_app(app)
 
 
 
@@ -38,20 +38,20 @@ def log_in():
         #vrati me na login
         return {"data":"bad request"},400
 
-    #to do database
-    #conn = mysql.connect()
-    #cursor = conn.cursor()
+    
+    conn = mysql.connect()
+    cursor = conn.cursor()
     if request.method == 'POST':
-        #if costumers_database.check_costumer(cursor, request.form['email'], request.form['password']):
-            #cursor.close()
-            #conn.close()'''
+        if costumers_database.check_costumer(cursor, request.form['email'], request.form['password']):
+            cursor.close()
+            conn.close()
             #redirect to index
             return {"data":"ok"},200
-            #else:
-            #cursor.close()
-            #conn.close()
+        else:
+            cursor.close()
+            conn.close()
             #vrati na log url_for('log_in')
-            #return {"data":"bad request"},400
+            return {"data":"bad request"},400
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -72,13 +72,13 @@ def register():
         _email = request.form['email']
         c = Customer(_first_name, _last_name, _password, _address, _town, _country, _phone_number, _email)
           
-        #conn = mysql.connect()
-        #cursor = conn.cursor()
+        conn = mysql.connect()
+        cursor = conn.cursor()
 
-        #costumers_database.add_customer(c, cursor, conn)
+        costumers_database.add_customer(c, cursor, conn)
 
-        #cursor.close()
-        #conn.close()
+        cursor.close()
+        conn.close()
        
         #jsonify({'redirect': url_for('log_in')})
         return {"data":"ok"},200
@@ -88,7 +88,7 @@ def change():
     if request.method == 'GET':
         return {"data" : "bad Request"},200
 
-    if request.method == 'POST':
+    if request.method == 'PUT':
         #TO DO map data from changed user
         return {'data' : 'OK'},200
     else:
