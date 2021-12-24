@@ -2,11 +2,13 @@ from os import truncate
 import re
 from flask import Flask, jsonify, request, render_template, url_for, redirect
 from model.Customer import Customer, CustomerSchema
+from model.CryptoCurrency import CryptoCurrency, CryptoCurrencySchema
 from flaskext.mysql import MySQL
 from flask_restful import Api
 from flask_cors import CORS
 from config import db, ma
 from costumer_db import CostumerTable
+from crypto_currency_db import CryptoCurrencyTable
 import yaml
 
 
@@ -15,6 +17,7 @@ api = Api(app)
 CORS(app)
 
 costumers_database = CostumerTable()
+cryptocurrencie_database = CryptoCurrencyTable()
 
 db_yaml = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 

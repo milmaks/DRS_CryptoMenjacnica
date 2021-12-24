@@ -15,28 +15,31 @@ class CryptoCurrencyTable:
         )
 
         crypto_currency_cursor = crypto_currency_db.cursor()
-        # crypto_currency_cursor.execute('CREATE TABLE IF NOT EXISTS Costumers (FirstName varchar(32), LastName varchar(32), '
-        #                   'Address varchar(32), City varchar(32), Country varchar(32), PhoneNumber varchar(32), '
-        #                    'Password varchar(32), Email varchar(32))')
+        crypto_currency_cursor.execute('CREATE TABLE IF NOT EXISTS CryptoCurrencies (CurrencyID varchar(32) NOT NULL PRIMARY KEY, CurrencyName varchar(32), '
+                           'CurrencyValue decimal(65,5))')
         crypto_currency_cursor.close()
         crypto_currency_db.close()
 
-    # to do: treba promeniti tabelu da odgovar acuvanju valuta
     def add_crypto_currency(self, crypto_currency, crypto_currency_cursor, conn):
-        # sql = 'INSERT INTO Costumers (FirstName, LastName, Address, City, Country, PhoneNumber, Password, Email) ' \
-        #      'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
-        # val = (customer.first_name, customer.last_name, customer.address, customer.town, customer.country,
-        #      customer.phoneNumber, customer.password, customer.email)
-        # crypto_currency_cursor.execute(sql, val)
+        sql = 'INSERT INTO CryptoCurrencies (CurrencyID, CurrencyName, CurrencyValue) ' \
+              'VALUES (%s, %s, %s)'
+        val = (crypto_currency.currency_id, crypto_currency.currency_name, crypto_currency.currency_value)
+        crypto_currency_cursor.execute(sql, val)
+        conn.commit()
+
+    def update_crypto_currency(self, crypto_currency, crypto_currency_cursor, conn):
+        sql = 'UPDATE CryptoCurrencies SET CurrencyValue = %s WHERE CurrencyID = %s'
+        val = (crypto_currency.currency_value, crypto_currency.currency_id)
+        crypto_currency_cursor.execute(sql, val)
         conn.commit()
 
     def check_costumer(self, crypto_currency_cursor, email, password):
-        crypto_currency_cursor.execute('SELECT * FROM Users')
+        crypto_currency_cursor.execute('SELECT * FROM CryptoCurrencies')
         data = crypto_currency_cursor.fetchall()
 
-        for costumer in data:
-            print(costumer, '\n')
-            if costumer[7] == email and costumer[6] == password:
+        for currencie in data:
+            print(currencie, '\n')
+            if currencie[2] != None or currencie[2] != 0:
                return True
 
         return False
