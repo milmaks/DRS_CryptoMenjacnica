@@ -2,7 +2,7 @@ import mysql.connector
 import yaml
 from flask import jsonify
 
-db = yaml.safe_load(open("yamls/db.yaml"))
+db = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 
 
 class CostumerTable:
