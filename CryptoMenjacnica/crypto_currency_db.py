@@ -1,7 +1,7 @@
 import mysql.connector
 import yaml
 
-db = yaml.safe_load(open("yamls/db.yaml"))
+db = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 
 
 # to do: treba promeniti tabelu da odgovar acuvanju valuta

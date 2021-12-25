@@ -1,10 +1,12 @@
 from os import truncate
 import re
 from flask import Flask, jsonify, request, render_template, url_for, redirect
+from flask.helpers import make_response
+from werkzeug.security import generate_password_hash, check_password_hash
 from model.Customer import Customer, CustomerSchema
 from model.CryptoCurrency import CryptoCurrency, CryptoCurrencySchema
 from flaskext.mysql import MySQL
-from flask_restful import Api
+# from flask_restful import Api
 from flask_cors import CORS
 from config import db, ma
 from costumer_db import CostumerTable
@@ -13,7 +15,7 @@ import yaml
 
 
 app = Flask(__name__)
-api = Api(app)
+#api = Api(app)
 CORS(app)
 
 costumers_database = CostumerTable()
@@ -29,39 +31,31 @@ app.config['MYSQL_DATABASE_HOST'] = db_yaml["mysql_host"]
 mysql.init_app(app)
 
 
-
-
-
-
-
-
 @app.route('/logIn', methods=['GET', 'POST'])
 def log_in():
-    if request.method == 'GET':
-        #vrati me na login
-        return {"data":"bad request"},400
-
-    
-    conn = mysql.connect()
-    cursor = conn.cursor()
     if request.method == 'POST':
-        if costumers_database.check_costumer(cursor, request.form['email'], request.form['password']):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        user = costumers_database.get_costumer(cursor, request.form['email'])
+        user_pass = user[6]
+        input_pass = request.form['password']
+        if user != None and check_password_hash(user_pass, input_pass):
             cursor.close()
             conn.close()
             #redirect to index
-            return {"data":"ok"},200
+            return {"data" : "ok", "redirect" : "/", "cookie" : request.form['email']}, 200
         else:
             cursor.close()
             conn.close()
             #vrati na log url_for('log_in')
-            return {"data":"bad request"},400
+            return {"data" : "bad request", "redirect" : "/logIn"}, 400
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         # vrati me na registre.html
-        return {"data":"bad request"},400
+        return {"data" : "bad request", "redirect" : "/logIn"}, 400
 
     if request.method == 'POST':
         
@@ -73,10 +67,17 @@ def register():
         _country = request.form['country']
         _phone_number = request.form['phone_number']
         _email = request.form['email']
-        c = Customer(_first_name, _last_name, _password, _address, _town, _country, _phone_number, _email)
-          
+        
         conn = mysql.connect()
         cursor = conn.cursor()
+
+        if costumers_database.get_costumer(cursor, _email) != None:
+            print("costumer exist")
+            return {"data":"Bad Request", "redirect" : "/logIn", "message" : "Costumer already exists."}, 400
+
+        hashed_password = generate_password_hash(_password, method='sha256')
+
+        c = Customer(_first_name, _last_name, hashed_password, _address, _town, _country, _phone_number, _email)
 
         costumers_database.add_customer(c, cursor, conn)
 
@@ -84,18 +85,38 @@ def register():
         conn.close()
        
         #jsonify({'redirect': url_for('log_in')})
-        return {"data":"ok"},200
+        return {"data":"ok", "redirect" : "/logIn"}, 200
 
-@app.route('/change', methods=['PUT'])
+@app.route('/change', methods=['POST', 'GET'])
 def change():
     if request.method == 'GET':
-        return {"data" : "bad Request"},200
+        return {"data" : "Bad Request"}, 400
 
-    if request.method == 'PUT':
+    if request.method == 'POST':
         #TO DO map data from changed user
-        return {'data' : 'OK'},200
-    else:
-        return {'data' : 'OK'},200
+        _first_name = request.form['first_name']
+        _last_name = request.form['last_name']
+        _password = request.form['password']
+        _address = request.form['address']
+        _town = request.form['town']
+        _country = request.form['country']
+        _phone_number = request.form['phone_number']
+        _email = request.form['email']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if costumers_database.get_costumer(cursor, _email) == None:
+            print("costumer is not existing")
+            return {"data":"Bad Request", "redirect" : "/logIn", "message" : "Costumer is not logged in."}, 400
+
+        hashed_password = generate_password_hash(_password, method='sha256')
+
+        c = Customer(_first_name, _last_name, hashed_password, _address, _town, _country, _phone_number, _email)
+
+        costumers_database.update_customer(c, cursor, conn)
+
+        return {'data' : 'OK', "redirect" : "/"}, 200
     
     
 if __name__ == "__main__":

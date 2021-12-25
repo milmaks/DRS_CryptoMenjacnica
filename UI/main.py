@@ -1,21 +1,12 @@
 from logging import debug
 from flask import Flask,  render_template,request,url_for,jsonify
-
-
-
-
+from pymysql import NULL
+from werkzeug.utils import redirect
 
 app = Flask(__name__)
 
-
-
-
 @app.route('/')
 def main_data():
-    return render_template('login.html')
-
-@app.route('/index')
-def index_page():
     return render_template('index.html')
 
 
@@ -25,32 +16,26 @@ def log_in():
         return render_template('login.html')
     
     if request.method == 'POST':   
-        return url_for('index_page')
+        return url_for('main_data')
         
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
-        return url_for('log_in')
+        return render_template('login.html')
 
     if request.method == 'POST':
-        
         return jsonify({'redirect': url_for('main_data')})
 
 
-@app.route('/change', methods=['PUT'])
+@app.route('/change', methods=['GET'])
 def change():
     if request.method == 'GET':
-        return {"data" : "bad Request"},200
-
-    if request.method == 'PUT':
-        #TO DO map data from changed user
-        return {'data' : 'OK'},200
-    else:
-        return {'data' : 'OK'},200
-    
-    
+        if 'username' in request.cookies:
+            user_cookie = request.cookies.get('username')
+            return render_template('changeCostumer.html', user_cookie = user_cookie)
+        else:
+            return redirect('/logIn')
     
     
     

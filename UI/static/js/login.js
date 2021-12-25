@@ -18,7 +18,18 @@ $(document).ready(function(){
 			data: $('#log_form').serialize(),
 			type: 'POST',
 			success: function(response){
-				if(response['data'] =="ok"){
+				document.cookie = "username=" + response["cookie"]
+				window.location.href = response["redirect"]
+			},
+			error: function(error){
+				console.log(error)
+				window.location.href = "/logIn"
+			}
+		});
+	});
+});
+
+/*	if(response['data'] =="ok"){
 					$.ajax({
 						url: 'http://127.0.0.1:8001/logIn',
 						data: $('#log_form').serialize(),
@@ -36,13 +47,4 @@ $(document).ready(function(){
 				}else{
 					console.log(response)
 					window.location.href = '/logIn'
-				}
-			},
-			error: function(error){
-
-				console.log(error)
-				window.location.href = '/logIn'
-			}
-		});
-	});
-});
+				}*/

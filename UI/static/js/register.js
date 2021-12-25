@@ -19,7 +19,18 @@ $(document).ready(function(){
 			type: 'POST',
 			success: function(response){
 				console.log(response)
-				if(response['data'] == 'ok'){
+				window.location.href = response["redirect"]
+			},
+			error: function(error){
+				console.log(error)
+				$('#id_error').content = error.responseJSON['message']
+				window.location.href = error.responseJSON['redirect	']
+			}
+		});
+	});
+});
+
+/*if(response['data'] == 'ok'){
 
 					$.ajax({
 						url: 'http://127.0.0.1:8001/register',
@@ -36,12 +47,4 @@ $(document).ready(function(){
 					});
 				}else{
 					window.location.href = '/logIn'
-				}
-			},
-			error: function(error){
-				console.log(response)
-				window.location.href = '/logIn'
-			}
-		});
-	});
-});
+				} */

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <link rel="stylesheet" href="../static/css/login-style.css">
+   <script src="../static/js/jquery-1.11.2.js"></script>
+   <link rel="stylesheet" href="../static/css/index-style.css" />
+   <script src="../static/js/changeUser.js"></script>
+   <script src="../static/js/jquery.validate.js"></script>
+   <title>Change User</title>
+ </head>
+ <body>
+    <div>
+        <form method="post" id="change_form">
+          <h1>Change Account</h1>
+             <label class="error-msg" id="id_error"> Err msg </label>
+             <table style="width:100%">
+                 <tr style="width:100%">
+                     <td style="align-items:left;justify-content: left;">
+                         <input type="text" class="first" placeholder="First name" name="first_name" required minlength="2" maxlength="32"/>
+                     </td style="align-items:right">
+                     <td>
+                         <input type="text" class="second" placeholder="Last name" name="last_name" required minlength="2" maxlength="32"/>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td colspan=2>
+                         <input type="text" placeholder="Home address" name="address" required/>
+                     </td>
+                 </tr>
+                 <tr style="width:100%">
+                     <td style="align-items:left;justify-content: left;">
+                         <input type="text" class="first" placeholder="City" name="town" required/>
+                     </td style="align-items:right">
+                     <td>
+                         <input type="text" class="second" placeholder="Country" name="country" required/>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td colspan=2>
+                         <input type="text" placeholder="Phone number" name="phone_number" required/>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td colspan=2>
+                         <input type="email" value={{user_cookie}} name="email" required readonly/>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td colspan=2>
+                         <input type="password" placeholder="Password" name="password" required minlength="8" maxlength="32"/>
+                     </td>
+                 </tr>
+             </table>
+             </br>
+             <button id="butn"  class="buttonH">Change</button>
+         </form>
+     </div>
+
+ </body>
+</html>
