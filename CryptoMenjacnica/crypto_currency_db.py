@@ -33,7 +33,7 @@ class CryptoCurrencyTable:
         crypto_currency_cursor.execute(sql, val)
         conn.commit()
 
-    def check_costumer(self, crypto_currency_cursor, email, password):
+    def check_crypto_currencies(self, crypto_currency_cursor, email, password):
         crypto_currency_cursor.execute('SELECT * FROM CryptoCurrencies')
         data = crypto_currency_cursor.fetchall()
 

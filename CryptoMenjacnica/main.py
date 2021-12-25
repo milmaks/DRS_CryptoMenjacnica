@@ -12,14 +12,16 @@ from config import db, ma
 from costumer_db import CostumerTable
 from crypto_currency_db import CryptoCurrencyTable
 import yaml
-
+from time import sleep
+from multiprocessing import Process, Lock
+import requests
 
 app = Flask(__name__)
 #api = Api(app)
 CORS(app)
 
 costumers_database = CostumerTable()
-cryptocurrencie_database = CryptoCurrencyTable()
+cryptocurrency_database = CryptoCurrencyTable()
 
 db_yaml = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 
@@ -118,6 +120,43 @@ def change():
 
         return {'data' : 'OK', "redirect" : "/"}, 200
     
+api_key = "d28eb9872dd6f65ba27f87e0eb4642d4ffbf9d76"
+ids = "BTC,ETH,BNB,USDT,SOL,ADA,USDC,XRP,DOT,AVAX,LUNA,DOGE,SHIB,MATIC,XCH"
+url = 'https://api.nomics.com/v1/currencies/ticker?key='+api_key+'&ids='+ids+'&interval=1d'
+
+def update(lock, data_json):
+    lock.acquire()
+    conn = mysql.connect()
+    cursor = conn.cursor()
     
+    for i in range(0, len(data_json)):
+        c = CryptoCurrency(data_json[i]['id'], data_json[i]['name'], data_json[i]['price'])
+        cryptocurrency_database.update_crypto_currency(c, cursor, conn)
+
+    conn.commit()
+    lock.release()
+
+def update_currencies():  
+    lock = Lock()
+
+    response = requests.get(url)
+    if response.status_code == 200:
+        data_json = response.json()
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        sql = "INSERT INTO CryptoCurrencies (CurrencyID, CurrencyName, CurrencyValue) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE CurrencyValue=%s"
+        for i in range(0, len(data_json)):
+            values = (data_json[i]['id'], data_json[i]['name'] ,data_json[i]['price'],data_json[i]['price'])
+            cursor.execute(sql, values)
+        conn.commit()
+       
+    while True:
+        response = requests.get(url)
+        if response.status_code == 200:
+            update(lock, response.json())
+        sleep(20)
+
 if __name__ == "__main__":
+    update_proces = Process(target=update_currencies, args=())
+    update_proces.start()
     app.run(port=8000, debug=True)
