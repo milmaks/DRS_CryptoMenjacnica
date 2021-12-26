@@ -45,6 +45,10 @@ def change():
         else:
             return redirect('/logIn')
     
+@app.route('/buyCrypto', methods=['GET', 'POST'])
+def buy_crypto():
+    if request.method == 'GET':
+        return render_template('buyCrypto.html')
     
 @app.route('/userCard', methods=['GET'])
 def userCard():

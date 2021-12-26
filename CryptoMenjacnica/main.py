@@ -14,6 +14,7 @@ import yaml
 from time import sleep
 from multiprocessing import Process, Lock
 import requests
+import simplejson
 
 app = Flask(__name__)
 CORS(app)
@@ -149,7 +150,28 @@ def change():
         costumers_database.update_customer(c, cursor, conn)
 
         return {'data' : 'OK', "redirect" : "/"}, 200
-    
+
+@app.route('/currency/getall', methods=['GET'])
+def getall():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM CryptoCurrencies')
+    data = cursor.fetchall()
+    json_string = simplejson.dumps(data)
+    return {"data":json_string}, 200
+
+@app.route('/buyCrypto', methods=['POST'])
+def buy_crypto():
+    if request.method == 'POST':
+        _cryprto_currency = request.form['cryptocurr']
+        _amount = request.form['amount']
+        _price = request.form['endPrice']
+        print(_cryprto_currency)
+        print(_amount)
+        print(_price)
+        return {"data" : "OK", "redirect" : "/"}, 200
+    return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
+
 api_key = "d28eb9872dd6f65ba27f87e0eb4642d4ffbf9d76"
 ids = "BTC,ETH,BNB,USDT,SOL,ADA,USDC,XRP,DOT,AVAX,LUNA,DOGE,SHIB,MATIC,XCH"
 url = 'https://api.nomics.com/v1/currencies/ticker?key='+api_key+'&ids='+ids+'&interval=1d'
