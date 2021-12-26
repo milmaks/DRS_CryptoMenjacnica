@@ -1,17 +1,23 @@
 from logging import debug
-from flask import Flask,  render_template,request,url_for,jsonify
+from flask import Flask,  render_template,request, session,url_for,jsonify
 from pymysql import NULL
 from werkzeug.utils import redirect
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app,supports_credinentails=True)
+
 
 @app.route('/')
-def main_data():
+def main_data():            
     return render_template('index.html')
 
 
 @app.route('/logIn', methods=['GET', 'POST'])
 def log_in():
+    if 'username' in request.cookies:
+        return redirect('/')
+            
     if request.method == 'GET':
         return render_template('login.html')
     
@@ -21,6 +27,8 @@ def log_in():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    
+        
     if request.method == 'GET':
         return render_template('login.html')
 
@@ -38,6 +46,15 @@ def change():
             return redirect('/logIn')
     
     
+@app.route('/userCard', methods=['GET'])
+def userCard():
+    if request.method == 'GET':
+        if 'username' in request.cookies:
+            user_cookie = request.cookies.get('username')
+            return render_template('userCard.html')
+        else:
+            return redirect('/logIn')
+        
     
 if __name__ == "__main__":
     app.run(port=8001, debug=True)

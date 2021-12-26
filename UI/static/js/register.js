@@ -29,22 +29,3 @@ $(document).ready(function(){
 		});
 	});
 });
-
-/*if(response['data'] == 'ok'){
-
-					$.ajax({
-						url: 'http://127.0.0.1:8001/register',
-						data: {'data':'ok'},
-						type: 'POST',
-						success: function(response){
-							console.log(response)
-							window.location.href = '/'
-						},
-						error: function(error){
-							console.log(response)
-							window.location.href = '/logIn'
-						}
-					});
-				}else{
-					window.location.href = '/logIn'
-				} */

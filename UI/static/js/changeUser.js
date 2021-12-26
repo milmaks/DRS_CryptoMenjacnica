@@ -8,6 +8,7 @@ $(document).ready(function(){
             $('#butn').prop('disabled', 'disabled');   // disables button
         }
     });
+	$('#id_error').hide();
 });
 
 $(document).ready(function(){
@@ -15,6 +16,7 @@ $(document).ready(function(){
 		event.preventDefault();
         $.ajax({
 			url: 'http://127.0.0.1:8000/change',
+			//xhrFields: { withCredentials: true },
 			data: $('#change_form').serialize(),
 			type: 'POST',
 			success: function(response){
@@ -25,5 +27,9 @@ $(document).ready(function(){
 				console.log(error)
 			}
 		});
+    });
+	$('#butnHome').click(function (){
+		event.preventDefault();
+        window.location.href = '/'
     });
 });

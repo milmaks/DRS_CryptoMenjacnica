@@ -1,12 +1,11 @@
 from os import truncate
 import re
-from flask import Flask, jsonify, request, render_template, url_for, redirect
+from flask import Flask, jsonify, request, render_template, url_for, redirect,session
 from flask.helpers import make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from model.Customer import Customer, CustomerSchema
 from model.CryptoCurrency import CryptoCurrency, CryptoCurrencySchema
 from flaskext.mysql import MySQL
-# from flask_restful import Api
 from flask_cors import CORS
 from config import db, ma
 from costumer_db import CostumerTable
@@ -17,13 +16,12 @@ from multiprocessing import Process, Lock
 import requests
 
 app = Flask(__name__)
-#api = Api(app)
 CORS(app)
 
 costumers_database = CostumerTable()
 cryptocurrency_database = CryptoCurrencyTable()
 
-db_yaml = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
+db_yaml = yaml.safe_load(open("yamls/db.yaml"))
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = db_yaml["mysql_user"]
@@ -42,6 +40,7 @@ def log_in():
         user_pass = user[6]
         input_pass = request.form['password']
         if user != None and check_password_hash(user_pass, input_pass):
+            
             cursor.close()
             conn.close()
             #redirect to index
@@ -52,6 +51,19 @@ def log_in():
             #vrati na log url_for('log_in')
             return {"data" : "bad request", "redirect" : "/logIn"}, 400
 
+#TO DO za kasnije ako bude trebalo proveravati cookie i da li ima u bazi taj email 
+#kasnije samo vracati na bad req i 400  i na neku baznu stranicu 
+
+def check()->bool:
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    flag = False
+    if costumers_database.get_costumer(cursor, request.cookies.get('username')) != None:
+        flag = True
+    
+    cursor.close()
+    conn.close()
+    return flag    
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -88,6 +100,24 @@ def register():
        
         #jsonify({'redirect': url_for('log_in')})
         return {"data":"ok", "redirect" : "/logIn"}, 200
+
+@app.route('/verify',methods = ['GET','POST'])
+def verify():
+    if request.method == 'GET':
+        return {"data" : "Bad Request",'redirect' : '/'}, 400
+    else:
+        #TO DO  nakako verifikovati karticu 
+        if False:
+            return {'data' : 'Bad request' , 'redirect' : '/','message':'Input values are incorrect'},400
+        else:
+            return {'data' : 'ok' , 'redirect' : '/'},200
+        
+        
+    
+    
+    
+    
+
 
 @app.route('/change', methods=['POST', 'GET'])
 def change():
