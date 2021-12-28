@@ -22,7 +22,7 @@ CORS(app)
 costumers_database = CostumerTable()
 cryptocurrency_database = CryptoCurrencyTable()
 
-db_yaml = yaml.safe_load(open("yamls/db.yaml"))
+db_yaml = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = db_yaml["mysql_user"]

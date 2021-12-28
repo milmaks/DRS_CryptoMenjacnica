@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
  <head>
+  <link rel="icon" href="../static/images/icon.png">
    <meta charset="UTF-8" />
    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <script src="../static/js/jquery-1.11.2.js"></script>
    <link rel="stylesheet" href="../static/css/index-style.css" />
    <script src="../static/js/index.js"></script>
+   <script src="../static/js/navbar.js"></script>
    <script src="../static/js/jquery.validate.js"></script>
    <title>Document</title>
  </head>
@@ -19,21 +21,22 @@
        <!-- NAVIGATION MENUS -->
        <div class="menu">
          <li><a href="/">Home</a></li>
+         {% if 'username' in request.cookies %}
          <li class="services">
-           <a href="/">Logged user</a>
-           <!-- DROPDOWN MENU -->
-           <ul class="dropdown">
-             <li><a href="/userCard">Walet </a></li>
-             <li><a href="/">Trade</a></li>
-             <li><a href="/">Walet </a></li>
-             <li><a href="/buyCrypto">Trade</a></li>
-             <li><a href="/">Transactions</a></li>
-             <li><a href="/">Crypto State</a></li>
-           </ul>
-         </li>
-         <li><a href="/logIn">Sign On</a></li>
-         <li><a href="/change">Change User</a></li>
-         <li><a  id="logOut">Logout</a></li>
+          <a href="/">Logged user&#32;</a>
+          <!-- DROPDOWN MENU -->
+          <ul class="dropdown">
+            <li><a href="/userCard">Walet </a></li>
+            <li><a href="/buyCrypto">Trade</a></li>
+            <li><a href="/">Transactions</a></li>
+            <li><a href="/">Crypto State</a></li>
+          </ul>
+        </li>
+        <li><a href="/change">Change User</a></li>
+        <li><a href="/logIn" id="logOut">Logout</a></li>
+        {% else %}
+        <li><a href="/logIn">Sign On</a></li>
+        {% endif %} 
        </div>
      </ul>
    </nav> 

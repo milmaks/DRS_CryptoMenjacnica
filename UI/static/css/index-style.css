@@ -48,14 +48,20 @@
    /* DROPDOWN MENU */
    .services {
     position: relative; 
+    width: 144px;
+    text-align: center;
    }
    .dropdown {
     background-color: #b40202;
     padding: 1em 0;
     position: absolute; /*WITH RESPECT TO PARENT*/
+    align-content: center;
+    overflow: visible;
     display: none;
     border-radius: 8px;
-    top: 35px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    left: 0px;
    }
    .dropdown li + li {
     margin-top: 10px;

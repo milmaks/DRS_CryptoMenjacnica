@@ -8,6 +8,7 @@
         <script src="../static/js/jquery-1.11.2.js"></script>
         <script src="../static/js/jquery.validate.js"></script>
         <script src="../static/js/buyCrypto.js"></script>
+        <script src="../static/js/navbar.js"></script>
         <link rel="stylesheet" href="../static/css/index-style.css" />
         <link rel="stylesheet" href="../static/css/buyCrypto-style.css">
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -22,21 +23,25 @@
               <!-- NAVIGATION MENUS -->
               <div class="menu">
                 <li><a href="/">Home</a></li>
+                {% if 'username' in request.cookies %}
                 <li class="services">
-                  <a href="/">Logged user</a>
-                  <!-- DROPDOWN MENU -->
-                  <ul class="dropdown">
-                    <li><a href="/">Walet </a></li>
-                    <li><a href="/buyCrypto">Trade</a></li>
-                    <li><a href="/">Transactions</a></li>
-                    <li><a href="/">Crypto State</a></li>
-                  </ul>
-                </li>
-                <li><a href="/logIn">Sign On</a></li>
-                <li><a href="/change">Change User</a></li>
+                 <a href="/">Logged user&#32;</a>
+                 <!-- DROPDOWN MENU -->
+                 <ul class="dropdown">
+                   <li><a href="/userCard">Walet </a></li>
+                   <li><a href="/buyCrypto">Trade</a></li>
+                   <li><a href="/">Transactions</a></li>
+                   <li><a href="/">Crypto State</a></li>
+                 </ul>
+               </li>
+               <li><a href="/change">Change User</a></li>
+               <li><a href="/logIn" id="logOut">Logout</a></li>
+               {% else %}
+               <li><a href="/logIn">Sign On</a></li>
+               {% endif %} 
               </div>
             </ul>
-          </nav>
+          </nav> 
 
           <div class="centered" id="centered">
             <div class="container" id="container">

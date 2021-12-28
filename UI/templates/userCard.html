@@ -2,45 +2,73 @@
 <html lang="en">
  <head>
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <link rel="stylesheet" href="../static/css/login-style.css">
+   <link rel="stylesheet" href="../static/css/buyCrypto-style.css">
    <script src="../static/js/jquery-1.11.2.js"></script>
    <link rel="stylesheet" href="../static/css/index-style.css" />
    <script src="../static/js/cardVerification.js"></script>
    <script src="../static/js/jquery.validate.js"></script>
+   <script src="../static/js/navbar.js"></script>
    <title>Card</title>
  </head>
  <body>
-    <div>
-        <form method="post" id="card_form">
-          <h1>Card Verification</h1>
-             <label  class="error-msg" id="id_error"> Err msg </label>
-             <table style="width:100%">
-                 <tr style="width:100%">
-                     <td style="align-items:left;justify-content: left;">
-                         <input type="text" class="first" placeholder="Card number" name="card_number" required />
-                     </td style="align-items:right">
-                     <td>
-                         <input type="password" class="second" placeholder="Card code" name="card_code" required />
-                     </td>
-                 </tr>
-                 <tr>
-                     <td colspan=2>
-                         <input type="text" placeholder="User name" name="user_name" required/>
-                     </td>
-                 </tr>
-                 <tr>
-                    <td colspan=2>
-                        <input type="number" placeholder="Amount" name="amount" required/>
-                    </td>
-                </tr>
-                
-             </table>
-             </br>
-             <button id="butnVerify"  class="buttonH">Verify</button>
-            </br>
-             <button id="butnHome"  class="buttonH">Home</button>
-         </form>
-     </div>
+    <nav class="navbar">
+        <!-- LOGO -->
+        <div class="logo">CryptoApp</div>
+        <!-- NAVIGATION MENU -->
+        <ul class="nav-links">
+          <!-- NAVIGATION MENUS -->
+          <div class="menu">
+            <li><a href="/">Home</a></li>
+            {% if 'username' in request.cookies %}
+            <li class="services">
+             <a href="/">Logged user&#32;</a>
+             <!-- DROPDOWN MENU -->
+             <ul class="dropdown">
+               <li><a href="/userCard">Walet </a></li>
+               <li><a href="/buyCrypto">Trade</a></li>
+               <li><a href="/">Transactions</a></li>
+               <li><a href="/">Crypto State</a></li>
+             </ul>
+           </li>
+           <li><a href="/change">Change User</a></li>
+           <li><a href="/logIn"  id="logOut">Logout</a></li>
+           {% else %}
+           <li><a href="/logIn">Sign On</a></li>
+           {% endif %} 
+          </div>
+        </ul>
+      </nav> 
+      <div class="centered" id="centered">
+        <div class="container" id="container">
+            <form method="post" id="card_form">
+            <h1>Card Verification</h1>
+                <label  class="error-msg" id="id_error"> Err msg </label>
+                <table style="width:100%">
+                    <tr style="width:100%">
+                        <td style="align-items:left;justify-content: left;">
+                            <input type="text" class="first" placeholder="Card number" name="card_number" required />
+                        </td style="align-items:right">
+                        <td>
+                            <input type="password" class="second" placeholder="Card code" name="card_code" required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan=2>
+                            <input type="text" placeholder="User name" name="user_name" required/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan=2>
+                            <input type="number" placeholder="Amount" name="amount" required/>
+                        </td>
+                    </tr>
+                    
+                </table>
+                </br>
+                <button id="butnVerify"  class="buttonH">Verify</button>
+            </form>
+        </div>
+      </div>
 
  </body>
 </html>
