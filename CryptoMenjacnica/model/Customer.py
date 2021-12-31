@@ -1,6 +1,8 @@
 from marshmallow import Schema, fields, post_load
 
 
+
+
 class CustomerSchema(Schema):
     first_name = fields.Str()
     last_name = fields.Str()
@@ -10,6 +12,7 @@ class CustomerSchema(Schema):
     country = fields.Str()
     phone_number = fields.Str()
     email = fields.Str()
+    verified = fields.Bool()
     
     #mapiramo customera 
     @post_load
@@ -26,6 +29,7 @@ class Customer():
     country = None
     phoneNumber = None
     email = None
+    verified = None
     
     #konsutrktor sa poljima
     def __init__(self, fist_name, last_name, password, address, town, country, phone_number, email):
@@ -37,6 +41,7 @@ class Customer():
         self.country = country
         self.phoneNumber = phone_number
         self.email = email
+        self.verified = False
         
     #c# notacija ToString() metoda
     #def __repr__(self) -> str:

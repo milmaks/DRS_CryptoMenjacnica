@@ -28,8 +28,7 @@
                  <a href="/">Logged user&#32;</a>
                  <!-- DROPDOWN MENU -->
                  <ul class="dropdown">
-                   <li><a href="/userCard">Walet </a></li>
-                   <li><a href="/buyCrypto">Trade</a></li>
+                   <li><a href="javascript:void(0)" onclick="loadBuyCrypto()" on>Trade</a></li>
                    <li><a href="/">Transactions</a></li>
                    <li><a href="/">Crypto State</a></li>
                  </ul>
@@ -48,12 +47,12 @@
                 <form method="post" id="buyCrypto_form">
                     <h1>Buy crypto</h1>
                     <label class="error-msg" id="id_error"> Err msg </label>
-                    </br>
+                    
                     <table>
                         <tr>
                             <td>Choose crypto currency:&nbsp;</td>
-                            <td>
-                                <select class="js-select2" name="cryptocurr" id="cryptocurr" style="width: 200px;" onchange="changePrice()">
+                            <td style="height:min-content; padding: none; margin: 0;">
+                                <select class="js-select2" clas="select2" name="cryptocurr" id="cryptocurr" style="width: 200px;" onchange="changePrice()">
                                     <option value=""></option>
                                 </select>
                             </td>
@@ -61,14 +60,42 @@
                         <tr>
                             <td>Enter amount:&nbsp;</td>
                             <td>
-                                <input type="number" name="amount" id="amount" step=".1" min="0.00001" onchange="changePrice()" onkeyup="changePrice()" value=""/>
+                                <input type="number" name="amount" id="amount" step="0.00001" min="0.00001" style="width: 200px;" onchange="changePrice()" onkeyup="changePrice()" value=""/>
                             </td>
                         </tr>
                         <tr>
                             <td>Final price to pay:&nbsp;</td>
                             <td>
                                 <label id="price" name="price"></label>
-                                <input type="hidden" name="endPrice" id="endPrice" value=""/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <span style="float: left; margin-left: 5px;">Card number</span>
+                                <input name="card_number" id="card_number" placeholder="&#149;&#149;&#149;&#149; &#149;&#149;&#149;&#149; &#149;&#149;&#149;&#149; &#149;&#149;&#149;&#149;" data-slots="&#149;" data-accept="\d" size="19" required> </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <input type="text" placeholder="Username" name="user_name" required/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <span style="float: left; margin-left: 5px;">Expiry date</span>
+                                <input class="first" name="expiry_date" id="expiry_date" placeholder="mm/yy" data-slots="my" required>
+                            </td>
+                            <td style="width: 50%;">
+                                <span style="float: left; margin-left: 5px;">CCV</span>
+                                <input class="second" name="ccv" id="ccv" placeholder="&#149;&#149;&#149;" data-slots="&#149;" data-accept="\d" size="3" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="float: right; margin-left: 5px;">Amount in $:&nbsp;</span>
+                              </td>
+                              <td>
+                                <input type="number" placeholder="Amount" name="endPrice" id="endPrice" value="1" readonly/>
                             </td>
                         </tr>
                         <tr>

@@ -18,15 +18,15 @@ class CostumerTable:
         costumer_cursor = costumer_db.cursor()
         costumer_cursor.execute('CREATE TABLE IF NOT EXISTS Costumers (FirstName varchar(32), LastName varchar(32), '
                             'Address varchar(32), City varchar(32), Country varchar(32), PhoneNumber varchar(32), '
-                            'Password varchar(256), Email varchar(32))')
+                            'Password varchar(256), Email varchar(32), Verified boolean)')
         costumer_cursor.close()
         costumer_db.close()
 
     def add_customer(self, customer, costumer_cursor, conn):
-        sql = 'INSERT INTO Costumers (FirstName, LastName, Address, City, Country, PhoneNumber, Password, Email) ' \
-              'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
+        sql = 'INSERT INTO Costumers (FirstName, LastName, Address, City, Country, PhoneNumber, Password, Email, Verified) ' \
+              'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
         val = (customer.first_name, customer.last_name, customer.address, customer.town, customer.country,
-               customer.phoneNumber, customer.password, customer.email)
+               customer.phoneNumber, customer.password, customer.email, False)
         costumer_cursor.execute(sql, val)
         conn.commit()
 
@@ -34,6 +34,12 @@ class CostumerTable:
         sql = 'UPDATE Costumers SET FirstName = %s, LastName = %s, Address = %s, City = %s, Country = %s, PhoneNumber = %s, Password = %s WHERE Email = %s'
         val = (customer.first_name, customer.last_name, customer.address, customer.town, customer.country,
                customer.phoneNumber, customer.password, customer.email)
+        costumer_cursor.execute(sql, val)
+        conn.commit()
+
+    def verify_customer(self, customer, costumer_cursor, conn):
+        sql = 'UPDATE Costumers SET Verified = %s WHERE Email = %s'
+        val = (True, customer[7])
         costumer_cursor.execute(sql, val)
         conn.commit()
 

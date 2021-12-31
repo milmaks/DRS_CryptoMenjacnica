@@ -24,10 +24,9 @@
              <a href="/">Logged user&#32;</a>
              <!-- DROPDOWN MENU -->
              <ul class="dropdown">
-               <li><a href="/userCard">Walet </a></li>
-               <li><a href="/buyCrypto">Trade</a></li>
-               <li><a href="/">Transactions</a></li>
-               <li><a href="/">Crypto State</a></li>
+              <li><a href="javascript:void(0)" onclick="loadBuyCrypto()" on>Trade</a></li>
+              <li><a href="/">Transactions</a></li>
+              <li><a href="/">Crypto State</a></li>
              </ul>
            </li>
            <li><a href="/change">Change User</a></li>
@@ -42,30 +41,41 @@
         <div class="container" id="container">
             <form method="post" id="card_form">
             <h1>Card Verification</h1>
-                <label  class="error-msg" id="id_error"> Err msg </label>
-                <table style="width:100%">
-                    <tr style="width:100%">
-                        <td style="align-items:left;justify-content: left;">
-                            <input type="text" class="first" placeholder="Card number" name="card_number" required />
-                        </td style="align-items:right">
-                        <td>
-                            <input type="password" class="second" placeholder="Card code" name="card_code" required />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan=2>
-                            <input type="text" placeholder="User name" name="user_name" required/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan=2>
-                            <input type="number" placeholder="Amount" name="amount" required/>
-                        </td>
-                    </tr>
-                    
-                </table>
-                </br>
-                <button id="butnVerify"  class="buttonH">Verify</button>
+              <label  class="error-msg" id="id_error"> Err msg </label>
+              <label>*Before buying/trading u must verify your account</label>
+              <table style="width:100%">
+                <tr>
+                  <td colspan="2">
+                      <span style="float: left; margin-left: 5px;">Card number</span>
+                      <input name="card_number" id="card_number" placeholder="&#149;&#149;&#149;&#149; &#149;&#149;&#149;&#149; &#149;&#149;&#149;&#149; &#149;&#149;&#149;&#149;" data-slots="&#149;" data-accept="\d" size="19" required> </div>
+                  </td>
+                </tr>
+                <tr>
+                    <td colspan=2>
+                        <input type="text" placeholder="Username" name="user_name" required/>
+                    </td>
+                </tr>
+                <tr>
+                  <td style="width: 50%;">
+                      <span style="float: left; margin-left: 5px;">Expiry date</span>
+                      <input class="first" name="expiry_date" id="expiry_date" placeholder="mm/yy" data-slots="my" required>
+                  </td>
+                  <td style="width: 50%;">
+                      <span style="float: left; margin-left: 5px;">CCV</span>
+                      <input class="second" name="ccv" id="ccv" placeholder="&#149;&#149;&#149;" data-slots="&#149;" data-accept="\d" size="3" required>
+                  </td>
+                </tr>
+                <tr>
+                    <td>
+                      <span style="float: right; margin-left: 5px;">Amount in $:</span>
+                    </td>
+                    <td>
+                      <input type="number" placeholder="Amount" name="amount" id="amount" value="1" readonly/>
+                    </td>
+                </tr>
+              </table>
+              </br>
+              <button id="butnVerify"  class="buttonH">Verify</button>
             </form>
         </div>
       </div>

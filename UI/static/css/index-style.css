@@ -23,6 +23,7 @@
     padding: 20px;
     background-color: #FF4B2B;
     color: #fff;
+    z-index: 11;
    }
    .nav-links a {
     color: #fff;
@@ -62,6 +63,7 @@
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     left: 0px;
+    z-index: 10;
    }
    .dropdown li + li {
     margin-top: 10px;

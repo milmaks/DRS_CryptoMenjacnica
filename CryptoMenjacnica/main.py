@@ -1,4 +1,5 @@
 from os import truncate
+from random import triangular
 import re
 from flask import Flask, jsonify, request, render_template, url_for, redirect,session
 from flask.helpers import make_response
@@ -108,10 +109,30 @@ def verify():
         return {"data" : "Bad Request",'redirect' : '/'}, 400
     else:
         #TO DO  nakako verifikovati karticu 
+        
+        _card_number = request.form['card_number']
+        _expiry_date = request.form['expiry_date']
+        _ccv = request.form['ccv']
+        _user_name = request.form['user_name']
+        _amount = request.form['amount']
+
+        print(_card_number)
+        print(_expiry_date)
+        print(_ccv)
+        print(_user_name)
+        print(_amount)
         if False:
             return {'data' : 'Bad request' , 'redirect' : '/','message':'Input values are incorrect'},400
         else:
-            return {'data' : 'ok' , 'redirect' : '/'},200
+            conn = mysql.connect()
+            cursor = conn.cursor()
+
+            c = costumers_database.get_costumer(cursor, request.form['username'])
+            costumers_database.verify_customer(c,cursor,conn)
+
+            cursor.close()
+            conn.close()
+            return {'data' : 'ok' , 'redirect' : '/buyCrypto'},200
         
         
     
@@ -139,6 +160,7 @@ def change():
         conn = mysql.connect()
         cursor = conn.cursor()
 
+        #TO DO: prebaciti verified!
         if costumers_database.get_costumer(cursor, _email) == None:
             print("costumer is not existing")
             return {"data":"Bad Request", "redirect" : "/logIn", "message" : "Costumer is not logged in."}, 400
@@ -151,24 +173,47 @@ def change():
 
         return {'data' : 'OK', "redirect" : "/"}, 200
 
-@app.route('/currency/getall', methods=['GET'])
+@app.route('/currency/getall', methods=['POST'])
 def getall():
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM CryptoCurrencies')
-    data = cursor.fetchall()
-    json_string = simplejson.dumps(data)
-    return {"data":json_string}, 200
+    if request.method == 'POST':
+        #print(request.cookies.get('username'))
+        if request.form['cookie'] == None:
+            return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
+        
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        c = costumers_database.get_costumer(cursor, request.form['cookie'].split('=')[1])
+        cursor.close()
+        conn.close()
+        if c[8] == True:
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM CryptoCurrencies')
+            data = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            json_string = simplejson.dumps(data)
+            return {"data":json_string}, 200
+        else:
+            return {"redirect" : "/userCard"}, 307
+    return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
 
 @app.route('/buyCrypto', methods=['POST'])
 def buy_crypto():
     if request.method == 'POST':
         _cryprto_currency = request.form['cryptocurr']
-        _amount = request.form['amount']
         _price = request.form['endPrice']
+        _card_number = request.form['card_number']
+        _expiry_date = request.form['expiry_date']
+        _ccv = request.form['ccv']
+        _user_name = request.form['user_name']
+
         print(_cryprto_currency)
-        print(_amount)
         print(_price)
+        print(_card_number)
+        print(_expiry_date)
+        print(_ccv)
+        print(_user_name)
         return {"data" : "OK", "redirect" : "/"}, 200
     return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
 
