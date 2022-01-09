@@ -20,6 +20,8 @@ import simplejson
 app = Flask(__name__)
 CORS(app)
 
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 costumers_database = CostumerTable()
 cryptocurrency_database = CryptoCurrencyTable()
 
@@ -109,6 +111,7 @@ def verify():
         return {"data" : "Bad Request",'redirect' : '/'}, 400
     else:
         #TO DO  nakako verifikovati karticu 
+
         
         _card_number = request.form['card_number']
         _expiry_date = request.form['expiry_date']
@@ -133,7 +136,39 @@ def verify():
             cursor.close()
             conn.close()
             return {'data' : 'ok' , 'redirect' : '/buyCrypto'},200
+
+        if False:
+            return {'data' : 'Bad request' , 'redirect' : '/','message':'Input values are incorrect'},400
+        else:
+            return {'data' : 'ok' , 'redirect' : '/'},200
+
         
+        _card_number = request.form['card_number']
+        _card_number = _card_number.replace('+' , ' ')
+        _expiry_date = request.form['expiry_date']
+        _expiry_date = _expiry_date.replace('%2F','/')
+        _ccv = request.form['ccv']
+        _user_name = request.form['user_name']
+        _amount = request.form['amount']
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        customer = costumers_database.get_costumer(cursor, request.form['username'])
+        
+        #print(_card_number)
+        #print(_expiry_date)
+        #print(_ccv)
+        #print(_user_name)
+        #print(_amount)
+        if customer[0] !=_user_name or _expiry_date != '02/23' or _ccv != '123' or _card_number != '4242 4242 4242 4242':
+            cursor.close()
+            conn.close()
+            return {'data' : 'Bad request' ,'Access-Control-Allow-Origin': 'true', 'redirect' : '/','message':'Input values are incorrect'},400
+        else:
+            costumers_database.verify_customer(customer,cursor,conn)
+            cursor.close()
+            conn.close()
+            return {'data' : 'ok' ,'redirect' : '/buyCrypto'},200
+
         
     
     
