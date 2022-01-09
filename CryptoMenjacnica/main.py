@@ -112,37 +112,6 @@ def verify():
     else:
         #TO DO  nakako verifikovati karticu 
 
-        
-        _card_number = request.form['card_number']
-        _expiry_date = request.form['expiry_date']
-        _ccv = request.form['ccv']
-        _user_name = request.form['user_name']
-        _amount = request.form['amount']
-
-        print(_card_number)
-        print(_expiry_date)
-        print(_ccv)
-        print(_user_name)
-        print(_amount)
-        if False:
-            return {'data' : 'Bad request' , 'redirect' : '/','message':'Input values are incorrect'},400
-        else:
-            conn = mysql.connect()
-            cursor = conn.cursor()
-
-            c = costumers_database.get_costumer(cursor, request.form['username'])
-            costumers_database.verify_customer(c,cursor,conn)
-
-            cursor.close()
-            conn.close()
-            return {'data' : 'ok' , 'redirect' : '/buyCrypto'},200
-
-        if False:
-            return {'data' : 'Bad request' , 'redirect' : '/','message':'Input values are incorrect'},400
-        else:
-            return {'data' : 'ok' , 'redirect' : '/'},200
-
-        
         _card_number = request.form['card_number']
         _card_number = _card_number.replace('+' , ' ')
         _expiry_date = request.form['expiry_date']
