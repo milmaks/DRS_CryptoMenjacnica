@@ -27,13 +27,18 @@ class CryptoCurrencyTable:
         crypto_currency_cursor.execute(sql, val)
         conn.commit()
 
+    def get_all_crypto_currencies(self, crypto_currency_cursor):
+        crypto_currency_cursor.execute('SELECT * FROM CryptoCurrencies')
+        data = crypto_currency_cursor.fetchall()
+        return data
+
     def update_crypto_currency(self, crypto_currency, crypto_currency_cursor, conn):
         sql = 'UPDATE CryptoCurrencies SET CurrencyValue = %s WHERE CurrencyID = %s'
         val = (crypto_currency.currency_value, crypto_currency.currency_id)
         crypto_currency_cursor.execute(sql, val)
         conn.commit()
 
-    def check_crypto_currencies(self, crypto_currency_cursor, email, password):
+    def check_crypto_currencies(self, crypto_currency_cursor):
         crypto_currency_cursor.execute('SELECT * FROM CryptoCurrencies')
         data = crypto_currency_cursor.fetchall()
 

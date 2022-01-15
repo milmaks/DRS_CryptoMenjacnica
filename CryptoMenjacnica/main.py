@@ -192,8 +192,7 @@ def getall():
         if c[8] == True:
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.execute('SELECT * FROM CryptoCurrencies')
-            data = cursor.fetchall()
+            data = cryptocurrency_database.get_all_crypto_currencies(cursor)
             cursor.close()
             conn.close()
             json_string = simplejson.dumps(data)
@@ -217,6 +216,23 @@ def buy_crypto():
         print(_card_number)
         print(_expiry_date)
         print(_ccv)
+        print(_user_name)
+        return {"data" : "OK", "redirect" : "/"}, 200
+    return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
+
+@app.route('/tradeCrypto', methods=['POST'])
+def trade_crypto():
+    if request.method == 'POST':
+        _cryprto_currency = request.form['cryptocurr']
+        _user_cryprto_currency = request.form['user_cryptocurr']
+        _value_of_trade = request.form['valueOfTrade']
+        _amount = request.form['amount']
+        _user_name = request.form['username']
+
+        print(_cryprto_currency)
+        print(_user_cryprto_currency)
+        print(_value_of_trade)
+        print(_amount)
         print(_user_name)
         return {"data" : "OK", "redirect" : "/"}, 200
     return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400

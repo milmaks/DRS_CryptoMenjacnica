@@ -49,6 +49,11 @@ def change():
 def buy_crypto():
     if request.method == 'GET':
         return render_template('buyCrypto.html')
+
+@app.route('/tradeCrypto', methods=['GET', 'POST'])
+def trade_crypto():
+    if request.method == 'GET':
+        return render_template('tradeCrypto.html')
     
 @app.route('/userCard', methods=['GET'])
 def userCard():
