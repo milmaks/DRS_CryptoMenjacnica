@@ -3,7 +3,9 @@ from random import triangular
 import re
 from flask import Flask, jsonify, request, render_template, url_for, redirect,session
 from flask.helpers import make_response
+from pymysql import cursors
 from werkzeug.security import generate_password_hash, check_password_hash
+from costumer_currency_db import CostumerCryptoCurrencyTable
 from model.Customer import Customer, CustomerSchema
 from model.CryptoCurrency import CryptoCurrency, CryptoCurrencySchema
 from flaskext.mysql import MySQL
@@ -16,6 +18,7 @@ from time import sleep
 from multiprocessing import Process, Lock
 import requests
 import simplejson
+from crypto_currency_enum import CurrencyType
 
 app = Flask(__name__)
 CORS(app)
@@ -24,6 +27,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 costumers_database = CostumerTable()
 cryptocurrency_database = CryptoCurrencyTable()
+costumer_currency_database = CostumerCryptoCurrencyTable()
 
 db_yaml = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 
@@ -123,6 +127,7 @@ def verify():
         cursor = conn.cursor()
         customer = costumers_database.get_costumer(cursor, request.form['username'])
         
+        cookie = request.form['username']
         #print(_card_number)
         #print(_expiry_date)
         #print(_ccv)
@@ -134,6 +139,8 @@ def verify():
             return {'data' : 'Bad request' ,'Access-Control-Allow-Origin': 'true', 'redirect' : '/','message':'Input values are incorrect'},400
         else:
             costumers_database.verify_customer(customer,cursor,conn)
+            #dodaje se korisnik u bazu i ima za sve kripto valute NULL
+            costumer_currency_database.add_costumer_to_table(cookie, cursor, conn)
             cursor.close()
             conn.close()
             return {'data' : 'ok' ,'redirect' : '/buyCrypto'},200
@@ -210,6 +217,8 @@ def buy_crypto():
         _expiry_date = request.form['expiry_date']
         _ccv = request.form['ccv']
         _user_name = request.form['user_name']
+        _amount = request.form['amount']
+        cookie = request.form['username']
 
         print(_cryprto_currency)
         print(_price)
@@ -217,6 +226,13 @@ def buy_crypto():
         print(_expiry_date)
         print(_ccv)
         print(_user_name)
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        #dodavanje kripto valute korisniku koji je kupio
+        costumer_currency_database.add_cryptocurency_to_table(cookie, CurrencyType[_cryprto_currency], _amount, cursor, conn)
+
         return {"data" : "OK", "redirect" : "/"}, 200
     return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
 
@@ -229,11 +245,20 @@ def trade_crypto():
         _amount = request.form['amount']
         _user_name = request.form['username']
 
+        cookie = request.form['username']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
         print(_cryprto_currency)
         print(_user_cryprto_currency)
         print(_value_of_trade)
         print(_amount)
         print(_user_name)
+
+        #rad sa bazom
+        costumer_currency_database.trade_crypto(cookie, CurrencyType[_user_cryprto_currency], CurrencyType[_cryprto_currency], _amount, _value_of_trade, cursor, conn)
+
         return {"data" : "OK", "redirect" : "/"}, 200
     return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
 

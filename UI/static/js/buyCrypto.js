@@ -94,7 +94,7 @@ $(document).ready(function(){
 
 		$.ajax({
 			url: 'http://127.0.0.1:8000/buyCrypto',
-			data: $('#buyCrypto_form').serialize(),
+			data: $('#buyCrypto_form').serialize()+ '&' + document.cookie,
 			type: 'POST',
 			success: function(response){
 				window.location.href = response["redirect"]
