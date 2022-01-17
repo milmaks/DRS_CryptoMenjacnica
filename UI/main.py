@@ -3,6 +3,8 @@ from flask import Flask,  render_template,request, session,url_for,jsonify
 from pymysql import NULL
 from werkzeug.utils import redirect
 from flask_cors import CORS
+import requests
+import json
 
 app = Flask(__name__)
 CORS(app,supports_credinentails=True)
@@ -63,7 +65,23 @@ def userCard():
             return render_template('userCard.html')
         else:
             return redirect('/logIn')
-        
+
+
+@app.route('/cryptoState', methods=['GET'])
+def crypto_state():
+    url = "http://127.0.0.1:8000/getUserCrypto"
+    if 'username' in request.cookies:
+        user_cookie = request.cookies.get('username')
+    
+    data = {"username" : user_cookie}
+    response = requests.post(url, data = data)
+
+    json_text = response.text
+
+    cryptos = json.JSONDecoder().decode(json_text)
+    crypto_lsit = cryptos['json_c']
+
+    return render_template('cryptoState.html', crypto_list = crypto_lsit, username = user_cookie)
     
 if __name__ == "__main__":
     app.run(port=8001, debug=True)

@@ -1,6 +1,7 @@
 from os import truncate
 from random import triangular
 import re
+from urllib import response
 from flask import Flask, jsonify, request, render_template, url_for, redirect,session
 from flask.helpers import make_response
 from pymysql import cursors
@@ -262,6 +263,21 @@ def trade_crypto():
         return {"data" : "OK", "redirect" : "/"}, 200
     return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
 
+
+@app.route('/getUserCrypto', methods=['POST'])
+def get_all_user_currrency():
+    if request.method == 'POST':
+        cookie = request.form['username']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        data = costumer_currency_database.retrive_all_currency_of_costumer(cookie, cursor, conn)
+
+        return {"json_c" : data}
+    
+
+
 api_key = "d28eb9872dd6f65ba27f87e0eb4642d4ffbf9d76"
 ids = "BTC,ETH,BNB,USDT,SOL,ADA,USDC,XRP,DOT,AVAX,LUNA,DOGE,SHIB,MATIC,XCH"
 url = 'https://api.nomics.com/v1/currencies/ticker?key='+api_key+'&ids='+ids+'&interval=1d'
@@ -297,6 +313,7 @@ def update_currencies():
         if response.status_code == 200:
             update(lock, response.json())
         sleep(20)
+
 
 if __name__ == "__main__":
     update_proces = Process(target=update_currencies, args=())

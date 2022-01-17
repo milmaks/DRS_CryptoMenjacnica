@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Crypto State</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../static/js/jquery-1.11.2.js"></script>
+    <script src="../static/js/navbar.js"></script>
+    <link rel="stylesheet" href="../static/css/index-style.css" />
+    <link rel="stylesheet" href="../static/css/buyCrypto-style.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+    <!-- LOGO -->
+    <div class="logo">CryptoApp</div>
+    <!-- NAVIGATION MENU -->
+    <ul class="nav-links">
+        <!-- NAVIGATION MENUS -->
+        <div class="menu">
+        <li><a href="/">Home</a></li>
+        {% if 'username' in request.cookies %}
+        <li class="services">
+            <a href="/">Logged user&#32;</a>
+            <!-- DROPDOWN MENU -->
+            <ul class="dropdown">
+            <li><a href="javascript:void(0)" onclick="loadBuyCrypto()" on>Buy</a></li>
+            <li><a href="javascript:void(0)" onclick="loadTradeCrypto()" on>Trade</a></li>
+            <li><a href="/">Transactions</a></li>
+            <li><a href="/cryptoState">Crypto State</a></li>
+            </ul>
+        </li>
+        <li><a href="/change">Change User</a></li>
+        <li><a href="/logIn" id="logOut">Logout</a></li>
+        {% else %}
+        <li><a href="/logIn">Sign On</a></li>
+        {% endif %} 
+        </div>
+    </ul>
+    </nav> 
+
+    <div class="centered" id="centered">
+        <div class="container" id="container" style="min-height: 350px;">
+            <h1>Cryptocurrency of user : {{username}}</h1>
+
+            <table>
+                    {% for n in crypto_list %}
+                        {% if crypto_list[n] != 'NULL'%}
+                            <tr>
+                                <td>{{n}}</td>
+                                <td>{{crypto_list[n]}}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+        </div> 
+    </div>
+
+</body>
+</html>
