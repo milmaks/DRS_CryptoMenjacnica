@@ -101,7 +101,8 @@ $(document).ready(function(){
 			},
 			error: function(error){
 				console.log(error)
-				window.location.href = "/logIn"
+                $('#id_error').show();
+			    document.getElementById('id_error').innerHTML = error.responseJSON['message']
 			}
 		});
 	});

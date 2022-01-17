@@ -16,19 +16,24 @@ class CryptoCurrencyTable:
 
         crypto_currency_cursor = crypto_currency_db.cursor()
         crypto_currency_cursor.execute('CREATE TABLE IF NOT EXISTS CryptoCurrencies (CurrencyID varchar(32) NOT NULL PRIMARY KEY, CurrencyName varchar(32), '
-                           'CurrencyValue decimal(65,5))')
+                           'CurrencyValue decimal(65,5), CurrencyImage varchar(256))')
         crypto_currency_cursor.close()
         crypto_currency_db.close()
 
     def add_crypto_currency(self, crypto_currency, crypto_currency_cursor, conn):
-        sql = 'INSERT INTO CryptoCurrencies (CurrencyID, CurrencyName, CurrencyValue) ' \
-              'VALUES (%s, %s, %s)'
+        sql = 'INSERT INTO CryptoCurrencies (CurrencyID, CurrencyName, CurrencyValue, CurrencyImage) ' \
+              'VALUES (%s, %s, %s, %s)'
         val = (crypto_currency.currency_id, crypto_currency.currency_name, crypto_currency.currency_value)
         crypto_currency_cursor.execute(sql, val)
         conn.commit()
 
     def get_all_crypto_currencies(self, crypto_currency_cursor):
         crypto_currency_cursor.execute('SELECT * FROM CryptoCurrencies')
+        data = crypto_currency_cursor.fetchall()
+        return data
+
+    def get_all_crypto_currencies_noimg(self, crypto_currency_cursor):
+        crypto_currency_cursor.execute('SELECT CurrencyID,CurrencyName,CurrencyValue FROM CryptoCurrencies')
         data = crypto_currency_cursor.fetchall()
         return data
 

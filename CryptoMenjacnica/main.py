@@ -137,7 +137,7 @@ def verify():
         if customer[0] !=_user_name or _expiry_date != '02/23' or _ccv != '123' or _card_number != '4242 4242 4242 4242':
             cursor.close()
             conn.close()
-            return {'data' : 'Bad request' ,'Access-Control-Allow-Origin': 'true', 'redirect' : '/','message':'Input values are incorrect'},400
+            return {'data' : 'Bad request' ,'Access-Control-Allow-Origin': 'true', 'message':'Card input values are incorrect'},400
         else:
             costumers_database.verify_customer(customer,cursor,conn)
             #dodaje se korisnik u bazu i ima za sve kripto valute NULL
@@ -185,7 +185,7 @@ def change():
 
         return {'data' : 'OK', "redirect" : "/"}, 200
 
-@app.route('/currency/getall', methods=['POST'])
+@app.route('/currency/getall', methods=['POST','GET'])
 def getall():
     if request.method == 'POST':
         #print(request.cookies.get('username'))
@@ -200,14 +200,22 @@ def getall():
         if c[8] == True:
             conn = mysql.connect()
             cursor = conn.cursor()
-            data = cryptocurrency_database.get_all_crypto_currencies(cursor)
+            data = cryptocurrency_database.get_all_crypto_currencies_noimg(cursor)
             cursor.close()
             conn.close()
             json_string = simplejson.dumps(data)
             return {"data":json_string}, 200
         else:
             return {"redirect" : "/userCard"}, 307
-    return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        data = cryptocurrency_database.get_all_crypto_currencies(cursor)
+        cursor.close()
+        conn.close()
+        json_string = simplejson.dumps(data)
+        return {"data":json_string}, 200
+    #return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
 
 @app.route('/buyCrypto', methods=['POST'])
 def buy_crypto():
@@ -221,19 +229,22 @@ def buy_crypto():
         _amount = request.form['amount']
         cookie = request.form['username']
 
-        print(_cryprto_currency)
-        print(_price)
-        print(_card_number)
-        print(_expiry_date)
-        print(_ccv)
-        print(_user_name)
-
         conn = mysql.connect()
         cursor = conn.cursor()
 
-        #dodavanje kripto valute korisniku koji je kupio
-        costumer_currency_database.add_cryptocurency_to_table(cookie, CurrencyType[_cryprto_currency], _amount, cursor, conn)
-
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        customer = costumers_database.get_costumer(cursor, request.form['username'])
+        
+        if customer[0] != _user_name or _expiry_date != '02/23' or _ccv != '123' or _card_number != '4242 4242 4242 4242':
+            cursor.close()
+            conn.close()
+            return {'data' : 'Bad request' ,'Access-Control-Allow-Origin': 'true','message':'Card input values are incorrect'},400
+        else:
+            #dodavanje kripto valute korisniku koji je kupio
+            costumer_currency_database.add_cryptocurency_to_table(cookie, CurrencyType[_cryprto_currency], _amount, cursor, conn)
+        cursor.close()
+        conn.close()
         return {"data" : "OK", "redirect" : "/"}, 200
     return {"data" : "BAD REQUEST", "redirect" : "/logIn"}, 400
 
@@ -302,9 +313,9 @@ def update_currencies():
         data_json = response.json()
         conn = mysql.connect()
         cursor = conn.cursor()
-        sql = "INSERT INTO CryptoCurrencies (CurrencyID, CurrencyName, CurrencyValue) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE CurrencyValue=%s"
+        sql = "INSERT INTO CryptoCurrencies (CurrencyID, CurrencyName, CurrencyValue, CurrencyImage) VALUES (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE CurrencyValue=%s"
         for i in range(0, len(data_json)):
-            values = (data_json[i]['id'], data_json[i]['name'] ,data_json[i]['price'],data_json[i]['price'])
+            values = (data_json[i]['id'], data_json[i]['name'] ,data_json[i]['price'], data_json[i]['logo_url'],data_json[i]['price'])
             cursor.execute(sql, values)
         conn.commit()
        
