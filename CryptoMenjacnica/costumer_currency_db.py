@@ -75,7 +75,7 @@ class CostumerCryptoCurrencyTable:
 
 
         if crypto_d[cryptotype.name] != 'NULL':
-            intAmount = int(crypto_d[cryptotype.name]) + int(crytpo_amount)
+            intAmount = float(crypto_d[cryptotype.name]) + float(crytpo_amount)
             crypto_d[cryptotype.name] = str(intAmount)
             val = (crypto_d[cryptotype.name], email)
         else:
@@ -93,7 +93,7 @@ class CostumerCryptoCurrencyTable:
 
         crypto_d = {"BTC" : data[0][1], "ETH" : data[0][2], "BNB" : data[0][3], "USDT" : data[0][4], "SOL" : data[0][5], "ADA" : data[0][6], "USDC" : data[0][7], "XRP" : data[0][8], "DOT" : data[0][9], "AVAX" : data[0][10], "LUNA" : data[0][11], "DOGE" : data[0][12], "SHIB" : data[0][13], "MATIC" : data[0][14], "XCH" : data[0][15] }
 
-        if crypto_d[crypto_one.name] < amount_one:
+        if crypto_d[crypto_one.name] == 'NULL' or crypto_d[crypto_one.name] < amount_one:
             return False
 
         sql = ["", ""]
@@ -141,9 +141,13 @@ class CostumerCryptoCurrencyTable:
         crypto_d[crypto_one.name] = str(intAmount)
         val[0] = (crypto_d[crypto_one.name], email)
 
-        intAmount = float(crypto_d[crypto_two.name]) + float(amount_two)
-        crypto_d[crypto_two.name] = str(intAmount)
-        val[1] = (crypto_d[crypto_two.name], email)
+        if crypto_d[crypto_two.name] != 'NULL':
+            intAmount = float(crypto_d[crypto_two.name]) + float(amount_two)
+            crypto_d[crypto_two.name] = str(intAmount)
+            val[1] = (crypto_d[crypto_two.name], email)
+        else:
+            crypto_d[crypto_two.name] = str(amount_two)
+            val[1] = (amount_two, email)
 
         costumer_crypto_currency_cursor.execute(sql[0], val[0])
         costumer_crypto_currency_cursor.execute(sql[1], val[1])
