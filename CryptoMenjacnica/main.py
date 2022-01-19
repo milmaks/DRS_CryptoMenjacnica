@@ -1,4 +1,6 @@
+from asyncio.windows_events import NULL
 from os import truncate
+from pickle import NONE
 from random import triangular
 import re
 from urllib import response
@@ -20,6 +22,7 @@ from multiprocessing import Process, Lock
 import requests
 import simplejson
 from crypto_currency_enum import CurrencyType
+from transactions_db import TransactionTable
 
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +32,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 costumers_database = CostumerTable()
 cryptocurrency_database = CryptoCurrencyTable()
 costumer_currency_database = CostumerCryptoCurrencyTable()
+transactions_database = TransactionTable()
 
 db_yaml = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 
@@ -286,6 +290,81 @@ def get_all_user_currrency():
         data = costumer_currency_database.retrive_all_currency_of_costumer(cookie, cursor, conn)
 
         return {"json_c" : data}
+
+
+@app.route("/makeTransaction", methods=['POST'])
+def make_transaction():
+    if request.method == 'POST':
+        _crypto_currency = request.form['user_cryptocurr']
+        _current_value = request.form['currentValue']
+        _amount = request.form['amount']
+        _reciever_email = request.form['reciever_email']
+        _sender_email = request.form['username']
+        cookie = request.form['username']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        emailCheck = costumers_database.get_costumer(cursor, _reciever_email)
+
+        if (isinstance(emailCheck, type(None))):
+            cursor.close()
+            conn.close()
+            return {"data" : "BAD REQUEST", "redirect" : "/transactions"}, 400
+
+        else:
+            costumer_currency_database.send_crypto(_sender_email, _crypto_currency, _amount, cursor, conn)
+            costumer_currency_database.recieve_crypto(_reciever_email, _crypto_currency, _amount, cursor, conn)
+            print(_crypto_currency)
+            print(_current_value)
+            print(_amount)
+            print(_reciever_email)
+            print(_sender_email)
+            print(cookie)
+
+            transactions_database.add_transaction(_sender_email, _reciever_email, _amount, _crypto_currency, _current_value, cursor, conn)
+
+            return {"data" : "OK", "redirect" : "/transactions"}
+    return {"data" : "BAD REQUEST", "redirect" : "/login"}
+
+
+
+@app.route('/getTransactions', methods=['POST'])
+def get_all_transactions():
+    if request.method == 'POST':
+        cookie = request.form['username']
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        data = transactions_database.get_my_transactions(cursor, cookie)
+        json_string = simplejson.dumps(data)
+        json_string.replace(" ", "")
+        return {"data" : json_string}, 200
+
+
+@app.route('/getTransactionsAsSender', methods=['POST'])
+def get_all_transactions_as_sender():
+    if request.method == 'POST':
+        cookie = request.form['username']
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        data = transactions_database.get_my_transactions_as_sender(cursor, cookie)
+        json_string = simplejson.dumps(data)
+        json_string.replace(" ", "")
+        return {"data" : json_string}, 200
+
+
+@app.route('/getTransactionsAsReciever', methods=['POST'])
+def get_all_transactions_as_reciever():
+    if request.method == 'POST':
+        cookie = request.form['username']
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        data = transactions_database.get_my_transactions_as_reciever(cursor, cookie)
+        json_string = simplejson.dumps(data)
+        json_string.replace(" ", "")
+        return {"data" : json_string}, 200
+
     
 
 

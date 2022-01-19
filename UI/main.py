@@ -82,6 +82,26 @@ def crypto_state():
     crypto_lsit = cryptos['json_c']
 
     return render_template('cryptoState.html', crypto_list = crypto_lsit, username = user_cookie)
+
+@app.route('/transactions', methods=['GET', 'POST'])
+def transactions():
+    if request.method == 'GET':
+       return render_template('transactions.html')
+    else:
+        url = "http://127.0.0.1:8000/getTransactions"
+        if 'username' in request.cookies:
+            user_cookie = request.cookies.get('username')
+
+        data = {"username" : user_cookie}
+        response = request.post(url, data = data)
+        json_text = response.text
+
+        tr_list = json.JSONDecoder().decode(json_text)
+        trans_list = tr_list['json_c']
+
+        return render_template('transactions.html', transaction_list = trans_list, username = user_cookie)
+
+
     
 if __name__ == "__main__":
     app.run(port=8001, debug=True)

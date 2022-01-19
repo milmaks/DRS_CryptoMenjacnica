@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Transactions</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="../static/js/jquery-1.11.2.js"></script>
+  <script src="../static/js/jquery.validate.js"></script>
+  <script src="../static/js/transactions.js"></script>
+  <script src="../static/js/navbar.js"></script>
+  <link rel="stylesheet" href="../static/css/index-style.css" />
+  <link rel="stylesheet" href="../static/css/transaction-style.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar">
+    <!-- LOGO -->
+    <div class="logo">CryptoApp</div>
+    <!-- NAVIGATION MENU -->
+    <ul class="nav-links">
+      <!-- NAVIGATION MENUS -->
+      <div class="menu">
+        <li><a href="/">Home</a></li>
+        {% if 'username' in request.cookies %}
+        <li class="services">
+          <a href="/">Logged user&#32;</a>
+          <!-- DROPDOWN MENU -->
+          <ul class="dropdown">
+            <li><a href="javascript:void(0)" onclick="loadBuyCrypto()" on>Buy</a></li>
+            <li><a href="javascript:void(0)" onclick="loadTradeCrypto()" on>Trade</a></li>
+            <li><a href="/transactions">Transactions</a></li>
+            <li><a href="/cryptoState">Crypto State</a></li>
+          </ul>
+        </li>
+        <li><a href="/change">Change User</a></li>
+        <li><a href="/logIn" id="logOut">Logout</a></li>
+        {% else %}
+        <li><a href="/logIn">Sign On</a></li>
+        {% endif %}
+      </div>
+    </ul>
+  </nav>
+
+  <div class="centered" id="centered">
+    <div class="container" id="container" style="overflow-x:auto;">
+      <form method="post" id="transaction_form">
+        <h1>Transactions</h1>
+        <label class="error-msg" id="id_error"> Err msg </label>
+        <br>
+
+        <table style="width:65%">
+          <tr>
+            <td>Reciever's Email:&nbsp;</td>
+            <td>
+              <input type="text" name="reciever_email" id="reciever_email" style="width: 200px; height: 30px;" />
+            </td>
+          </tr>
+          <tr>
+            <td>Crypto currency:&nbsp;</td>
+            <td style="height:min-content; padding: none; margin: 0;">
+              <select class="js-select2" clas="select2" name="user_cryptocurr" id="user_cryptocurr"
+                style="width: 200px;" onchange="changeMessage()">
+                <option value=""></option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Amount:&nbsp;</td>
+            <td>
+              <input type="number" name="amount" id="amount" step="0.00001" min="0.00001"
+                style="width: 200px; height: 30px;" onchange="changeMessage()" onkeyup="changeMessage()" value="" />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding-top: 10px;">
+              <label id="message" name="message" style="color: red;">PORUKA</label>
+            </td>
+          </tr>
+
+        </table>
+        </br>
+        <button id="start_transaction" class="buttonH">Make transaction</button>
+
+        <br><br><br><br>
+
+
+        <!--if(transactions.exist)-->
+
+        <!--crtaj tabelu-->
+        <!--else-->
+
+        <select id="transactionType" class="js-select2" clas="select2" style="width: 200px;"
+          onchange="load_transactions()">
+          <option>All transactions</option>
+          <option>Sent</option>
+          <option>Recieved</option>
+        </select>
+        <br><br><br><br>
+
+        <label id="table_empty">Ne postoje zabeležene transakcije!</label>
+
+
+        <table cellspacing="0" cellpadding="0" id="transaction_table" name="currencyTable"
+          style="margin-left: auto;margin-right: auto; width: 100%;">
+          <tr>
+            <th style="border-bottom: 2px solid black;">Sender Email</th>
+            <th style="border-bottom: 2px solid black;">Reciever Email</th>
+            <th style="border-bottom: 2px solid black;">Amount</th>
+            <th style="border-bottom: 2px solid black;">Crypto Currency</th>
+            <th style="border-bottom: 2px solid black;">Value</th>
+            <th style="border-bottom: 2px solid black;">Time</th>
+          </tr>
+        </table>
+
+
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -162,3 +162,110 @@ class CostumerCryptoCurrencyTable:
         crypto_d = {"BTC" : data[0][1], "ETH" : data[0][2], "BNB" : data[0][3], "USDT" : data[0][4], "SOL" : data[0][5], "ADA" : data[0][6], "USDC" : data[0][7], "XRP" : data[0][8], "DOT" : data[0][9], "AVAX" : data[0][10], "LUNA" : data[0][11], "DOGE" : data[0][12], "SHIB" : data[0][13], "MATIC" : data[0][14], "XCH" : data[0][15] }
         
         return crypto_d
+
+
+    def send_crypto(self, email, cryptoID, amount, costumer_crypto_currency_cursor, conn):
+        sql = 'SELECT * FROM CostumerCryptoCurrencies WHERE CostumerID = %s'
+        val = (email)
+        costumer_crypto_currency_cursor.execute(sql, val)
+        data = costumer_crypto_currency_cursor.fetchall()
+        crypto_d = {"BTC" : data[0][1], "ETH" : data[0][2], "BNB" : data[0][3], "USDT" : data[0][4], "SOL" : data[0][5], "ADA" : data[0][6], "USDC" : data[0][7], "XRP" : data[0][8], "DOT" : data[0][9], "AVAX" : data[0][10], "LUNA" : data[0][11], "DOGE" : data[0][12], "SHIB" : data[0][13], "MATIC" : data[0][14], "XCH" : data[0][15] }
+        curAmount = float(crypto_d[cryptoID])
+        toReduce = float(amount)
+        gas = 0.05 * toReduce
+        if curAmount >= toReduce + gas:
+            curAmount = curAmount - toReduce - gas
+        
+        if curAmount == 0:
+            curAmount = 'NULL'
+
+        sql = ""
+        val = (curAmount, email)
+
+        if cryptoID == 'BTC':
+            sql = 'UPDATE CostumerCryptoCurrencies SET BTC = %s WHERE CostumerID = %s'
+        elif cryptoID == 'ETH':
+            sql = 'UPDATE CostumerCryptoCurrencies SET ETH = %s WHERE CostumerID = %s'
+        elif cryptoID == 'BNB':
+            sql = 'UPDATE CostumerCryptoCurrencies SET BNB = %s WHERE CostumerID = %s'
+        elif cryptoID == 'USDT':
+            sql = 'UPDATE CostumerCryptoCurrencies SET USDT = %s WHERE CostumerID = %s'
+        elif cryptoID == 'SOL':
+            sql = 'UPDATE CostumerCryptoCurrencies SET SOL = %s WHERE CostumerID = %s'
+        elif cryptoID == 'ADA':
+            sql = 'UPDATE CostumerCryptoCurrencies SET ADA = %s WHERE CostumerID = %s'
+        elif cryptoID == 'USDC':
+            sql = 'UPDATE CostumerCryptoCurrencies SET USDC = %s WHERE CostumerID = %s'
+        elif cryptoID == 'XRP':
+            sql = 'UPDATE CostumerCryptoCurrencies SET XRP = %s WHERE CostumerID = %s'
+        elif cryptoID == 'DOT':
+            sql = 'UPDATE CostumerCryptoCurrencies SET DOT = %s WHERE CostumerID = %s'
+        elif cryptoID == 'AVAX':
+            sql = 'UPDATE CostumerCryptoCurrencies SET AVAX = %s WHERE CostumerID = %s'
+        elif cryptoID == 'LUNA':
+            sql = 'UPDATE CostumerCryptoCurrencies SET LUNA = %s WHERE CostumerID = %s'
+        elif cryptoID == 'DOGE':
+            sql = 'UPDATE CostumerCryptoCurrencies SET DOGE = %s WHERE CostumerID = %s'
+        elif cryptoID == 'SHIB':
+            sql = 'UPDATE CostumerCryptoCurrencies SET SHIB = %s WHERE CostumerID = %s'
+        elif cryptoID == 'MATIC':
+            sql = 'UPDATE CostumerCryptoCurrencies SET MATIC = %s WHERE CostumerID = %s'
+        elif cryptoID == 'XCH':
+            sql = 'UPDATE CostumerCryptoCurrencies SET XCH = %s WHERE CostumerID = %s'
+        
+        costumer_crypto_currency_cursor.execute(sql, val)
+        conn.commit()
+        
+
+    def recieve_crypto(self, email, cryptoID, amount, costumer_crypto_currency_cursor, conn):
+        sql = 'SELECT * FROM CostumerCryptoCurrencies WHERE CostumerID = %s'
+        val = (email)
+        costumer_crypto_currency_cursor.execute(sql, val)
+        data = costumer_crypto_currency_cursor.fetchall()
+
+        crypto_d = {"BTC" : data[0][1], "ETH" : data[0][2], "BNB" : data[0][3], "USDT" : data[0][4], "SOL" : data[0][5], "ADA" : data[0][6], "USDC" : data[0][7], "XRP" : data[0][8], "DOT" : data[0][9], "AVAX" : data[0][10], "LUNA" : data[0][11], "DOGE" : data[0][12], "SHIB" : data[0][13], "MATIC" : data[0][14], "XCH" : data[0][15] }
+        curAmount = 0
+        if crypto_d[cryptoID] == 'NULL':
+            crypto_d[cryptoID] = amount
+            curAmount = float(amount)
+        else:
+            curAmount = float(crypto_d[cryptoID])
+            toAdd = float(amount)
+            curAmount += toAdd
+
+        sql = ""
+        val = (curAmount, email)
+
+        if cryptoID == 'BTC':
+            sql = 'UPDATE CostumerCryptoCurrencies SET BTC = %s WHERE CostumerID = %s'
+        elif cryptoID == 'ETH':
+            sql = 'UPDATE CostumerCryptoCurrencies SET ETH = %s WHERE CostumerID = %s'
+        elif cryptoID == 'BNB':
+            sql = 'UPDATE CostumerCryptoCurrencies SET BNB = %s WHERE CostumerID = %s'
+        elif cryptoID == 'USDT':
+            sql = 'UPDATE CostumerCryptoCurrencies SET USDT = %s WHERE CostumerID = %s'
+        elif cryptoID == 'SOL':
+            sql = 'UPDATE CostumerCryptoCurrencies SET SOL = %s WHERE CostumerID = %s'
+        elif cryptoID == 'ADA':
+            sql = 'UPDATE CostumerCryptoCurrencies SET ADA = %s WHERE CostumerID = %s'
+        elif cryptoID == 'USDC':
+            sql = 'UPDATE CostumerCryptoCurrencies SET USDC = %s WHERE CostumerID = %s'
+        elif cryptoID == 'XRP':
+            sql = 'UPDATE CostumerCryptoCurrencies SET XRP = %s WHERE CostumerID = %s'
+        elif cryptoID == 'DOT':
+            sql = 'UPDATE CostumerCryptoCurrencies SET DOT = %s WHERE CostumerID = %s'
+        elif cryptoID == 'AVAX':
+            sql = 'UPDATE CostumerCryptoCurrencies SET AVAX = %s WHERE CostumerID = %s'
+        elif cryptoID == 'LUNA':
+            sql = 'UPDATE CostumerCryptoCurrencies SET LUNA = %s WHERE CostumerID = %s'
+        elif cryptoID == 'DOGE':
+            sql = 'UPDATE CostumerCryptoCurrencies SET DOGE = %s WHERE CostumerID = %s'
+        elif cryptoID == 'SHIB':
+            sql = 'UPDATE CostumerCryptoCurrencies SET SHIB = %s WHERE CostumerID = %s'
+        elif cryptoID == 'MATIC':
+            sql = 'UPDATE CostumerCryptoCurrencies SET MATIC = %s WHERE CostumerID = %s'
+        elif cryptoID == 'XCH':
+            sql = 'UPDATE CostumerCryptoCurrencies SET XCH = %s WHERE CostumerID = %s'
+        
+        costumer_crypto_currency_cursor.execute(sql, val)
+        conn.commit()
