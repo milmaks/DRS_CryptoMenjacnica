@@ -1,5 +1,6 @@
 import mysql.connector
 import yaml
+import threading
 from crypto_currency_enum import CurrencyType
 
 db = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
@@ -7,6 +8,7 @@ db = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
 
 class CostumerCryptoCurrencyTable:
     def __init__(self):
+        self.lock = threading.Lock()
         costumer_crypto_currency_db = mysql.connector.connect(
             host=db["mysql_host"],
             user=db["mysql_user"],
@@ -163,10 +165,26 @@ class CostumerCryptoCurrencyTable:
         
         return crypto_d
 
+    def retrieve_concrete_currency_of_customer(self, email, currency, costumer_crypto_currency_cursor, conn):
+        sql = 'SELECT * FROM CostumerCryptoCurrencies WHERE CostumerID = %s'
+        val = (email)
+        
+        self.lock.acquire()
+        costumer_crypto_currency_cursor.execute(sql, val)
+        data = costumer_crypto_currency_cursor.fetchall()
+        crypto_d = {"BTC" : data[0][1], "ETH" : data[0][2], "BNB" : data[0][3], "USDT" : data[0][4], "SOL" : data[0][5], "ADA" : data[0][6], "USDC" : data[0][7], "XRP" : data[0][8], "DOT" : data[0][9], "AVAX" : data[0][10], "LUNA" : data[0][11], "DOGE" : data[0][12], "SHIB" : data[0][13], "MATIC" : data[0][14], "XCH" : data[0][15] }
+        currencyAmount = crypto_d[currency]
+        
+        self.lock.release()
+
+        return currencyAmount
+
+
 
     def send_crypto(self, email, cryptoID, amount, costumer_crypto_currency_cursor, conn):
         sql = 'SELECT * FROM CostumerCryptoCurrencies WHERE CostumerID = %s'
         val = (email)
+        self.lock.acquire()
         costumer_crypto_currency_cursor.execute(sql, val)
         data = costumer_crypto_currency_cursor.fetchall()
         crypto_d = {"BTC" : data[0][1], "ETH" : data[0][2], "BNB" : data[0][3], "USDT" : data[0][4], "SOL" : data[0][5], "ADA" : data[0][6], "USDC" : data[0][7], "XRP" : data[0][8], "DOT" : data[0][9], "AVAX" : data[0][10], "LUNA" : data[0][11], "DOGE" : data[0][12], "SHIB" : data[0][13], "MATIC" : data[0][14], "XCH" : data[0][15] }
@@ -216,10 +234,15 @@ class CostumerCryptoCurrencyTable:
         costumer_crypto_currency_cursor.execute(sql, val)
         conn.commit()
         
+        self.lock.release()
+        
 
     def recieve_crypto(self, email, cryptoID, amount, costumer_crypto_currency_cursor, conn):
         sql = 'SELECT * FROM CostumerCryptoCurrencies WHERE CostumerID = %s'
         val = (email)
+        
+        self.lock.acquire()
+
         costumer_crypto_currency_cursor.execute(sql, val)
         data = costumer_crypto_currency_cursor.fetchall()
 
@@ -269,3 +292,4 @@ class CostumerCryptoCurrencyTable:
         
         costumer_crypto_currency_cursor.execute(sql, val)
         conn.commit()
+        self.lock.release()

@@ -85,8 +85,7 @@
         </br>
         <button id="start_transaction" class="buttonH">Make transaction</button>
 
-        <br><br><br><br>
-
+        <br><br>
 
         <!--if(transactions.exist)-->
 
@@ -99,20 +98,23 @@
           <option>Sent</option>
           <option>Recieved</option>
         </select>
-        <br><br><br><br>
+        <br><br>
 
-        <label id="table_empty">Ne postoje zabeležene transakcije!</label>
+        <label id="table_empty">There are no transactions!</label>
 
 
         <table cellspacing="0" cellpadding="0" id="transaction_table" name="currencyTable"
-          style="margin-left: auto;margin-right: auto; width: 100%;">
+          style="margin-left: auto;margin-right: auto; width: 100%; overflow-y:scroll; height:220px; display:block;">
           <tr>
-            <th style="border-bottom: 2px solid black;">Sender Email</th>
-            <th style="border-bottom: 2px solid black;">Reciever Email</th>
-            <th style="border-bottom: 2px solid black;">Amount</th>
-            <th style="border-bottom: 2px solid black;">Crypto Currency</th>
-            <th style="border-bottom: 2px solid black;">Value</th>
-            <th style="border-bottom: 2px solid black;">Time</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Sender<br>Email</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Reciever<br>Email</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Amount</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Crypto<br>Currency</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Value<br>($)</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Gas</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Total<br>Cost ($)</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Time</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Status</th>
           </tr>
         </table>
 

@@ -23,6 +23,10 @@ import requests
 import simplejson
 from crypto_currency_enum import CurrencyType
 from transactions_db import TransactionTable
+from transaction_state_enum import TransactionState
+from Crypto.Hash import keccak
+import random
+import threading
 
 app = Flask(__name__)
 CORS(app)
@@ -301,6 +305,8 @@ def make_transaction():
         _reciever_email = request.form['reciever_email']
         _sender_email = request.form['username']
         cookie = request.form['username']
+        
+        
 
         conn = mysql.connect()
         cursor = conn.cursor()
@@ -312,17 +318,21 @@ def make_transaction():
             conn.close()
             return {"data" : "BAD REQUEST", "redirect" : "/transactions"}, 400
 
-        else:
-            costumer_currency_database.send_crypto(_sender_email, _crypto_currency, _amount, cursor, conn)
-            costumer_currency_database.recieve_crypto(_reciever_email, _crypto_currency, _amount, cursor, conn)
-            print(_crypto_currency)
-            print(_current_value)
-            print(_amount)
-            print(_reciever_email)
-            print(_sender_email)
-            print(cookie)
+        else: #sender_email, reciever_email, amount, crypto_currency, current_value, cursor, conn
+            _gas = 0.05 * float(_amount)
+            hashValue = calculate_hash(_sender_email, _reciever_email, _amount)
+            
+            state = TransactionState.PROCESSING
+            #costumer_currency_database.send_crypto(_sender_email, _crypto_currency, _amount, cursor, conn)
+            #costumer_currency_database.recieve_crypto(_reciever_email, _crypto_currency, _amount, cursor, conn)
 
-            transactions_database.add_transaction(_sender_email, _reciever_email, _amount, _crypto_currency, _current_value, cursor, conn)
+            transactions_database.add_transaction(hashValue, _sender_email, _reciever_email, _amount, _crypto_currency, _current_value, _gas, state, cursor, conn)
+
+
+            thread = threading.Thread(target=validate_blockchain, args=(hashValue, _sender_email, _reciever_email, _amount, _crypto_currency, _current_value, _gas, cursor, conn))
+            
+            thread.start()
+            
 
             return {"data" : "OK", "redirect" : "/transactions"}
     return {"data" : "BAD REQUEST", "redirect" : "/login"}
@@ -403,6 +413,65 @@ def update_currencies():
         if response.status_code == 200:
             update(lock, response.json())
         sleep(20)
+
+
+def validate_blockchain(hashValue, sender_email, reciever_email, amount, crypto_currency, current_value, gas, cursor, conn):
+    state = TransactionState.COMPLETE
+    threadID = threading.get_ident()
+    counter = 0
+    while(counter != 60):
+        sleep(5)
+        counter += 1
+        remainingTime = 300 - counter * 5
+        print("Thread: %d is currently validating transaction with hash: %s. \nRemaining time: %d seconds" % (threadID, hashValue, remainingTime))
+    currencyAmount = ""
+    while(True):
+        try:
+            currencyAmount = costumer_currency_database.retrieve_concrete_currency_of_customer(sender_email, crypto_currency, cursor, conn)
+            break
+        except:
+            print("Waiting for locked object")
+            sleep(0.05)
+
+    if float(currencyAmount) < float(amount) + gas:
+        state = TransactionState.DENIED
+    else:
+        state = TransactionState.COMPLETE
+        while(True):
+            try:
+                costumer_currency_database.send_crypto(sender_email, crypto_currency, amount, cursor, conn)
+                break
+            except:
+                print("Waiting for locked object")
+                sleep(0.05)
+        while(True):
+            try:      
+                costumer_currency_database.recieve_crypto(reciever_email, crypto_currency, amount, cursor, conn)
+                break
+            except:
+                print("Waiting for locked object")
+                sleep(0.05)
+
+    while(True):
+        try:
+            transactions_database.finish_transaction(hashValue, state, cursor, conn)
+            break
+        except:
+            print("Waiting for locked object")
+            sleep(0.05)
+
+    #return {"data" : "OK", "redirect" : "/transactions"}
+
+def calculate_hash(sender_email, reciever_email, amount):
+    random.seed()
+    randInt = random.randint(1, 1000000)
+    strToCalculateHash = sender_email + reciever_email + amount + str(randInt)
+    byte_array = strToCalculateHash.encode('utf-8')
+    hashVal = keccak.new(digest_bits=256)
+    hashVal.update(byte_array)
+    print(hashVal.hexdigest())
+    retval = hashVal.hexdigest()
+    return retval
 
 
 if __name__ == "__main__":

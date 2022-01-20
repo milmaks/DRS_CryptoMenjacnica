@@ -88,10 +88,11 @@ function changeMessage() {
     if (document.getElementById('user_cryptocurr').selectedIndex != 0 && document.getElementById('amount').value != "" && document.getElementById('reciever_email').value != "") {
         amount = parseFloat(document.getElementById('amount').value);
         let gas = 0.05 * amount;
+        let price = amount + gas;
         let usr = document.cookie.substring(9);
         if(document.getElementById('reciever_email').value != usr)
         {
-            if (parseFloat(user_crypto_array[document.getElementById('user_cryptocurr').value]) >= amount + gas) {
+            if (parseFloat(user_crypto_array[document.getElementById('user_cryptocurr').value]) >= amount) {
                 for (let i = 0; i < crypto_array.length; i++) {
                     if (crypto_array[i][0] == document.getElementById('user_cryptocurr').value) {
                         currentValue = parseFloat(crypto_array[i][2]);
@@ -100,7 +101,7 @@ function changeMessage() {
                     }
                 }
                 document.getElementById('message').innerHTML = "By proceeding with this you will send your " + amount + " " + id + "'s " +
-                    " to user " + document.getElementById('reciever_email').value + ". " + "\n" + "Gas costs will be included: " + gas + ". " + "\nTotal: " + amount + gas;
+                    " to user " + document.getElementById('reciever_email').value + ". " + "\n" + "Gas costs will be included: " + gas + ". " + "\nTotal: " + price;
                 approveTransaction = true;
             }
             else {
@@ -192,9 +193,41 @@ function load_transactions() {
                     
                     for (var i = 1; i <= transaction_array.length; i++) {
                         var newRow = table.insertRow(i);
-                        for (var j = 1; j < 7; j++) {
-                            var cell = newRow.insertCell(j - 1);
-
+                        let id_str = "row";
+                        let id = id_str.concat(i.toString());
+                        newRow.id = id;
+                        document.getElementById(id).style.height = "15px";
+                        for (var j = 2; j < 11; j++) {
+                            var cell = newRow.insertCell(j - 2);
+                            let id_str = "cell";
+                            let id = id_str.concat(i.toString());
+                            id = id.concat((j-2).toString());
+                            cell.id = id;
+                            console.log(cell.id);
+                            document.getElementById(id).style.padding = "5px";
+                            if(j == 9)
+                            {
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2, 21);
+                            }
+                            if(j == 10)
+                            {
+                                id_str = "status_cell";
+                                id = id_str.concat(i.toString());
+                                id = id.concat((j-2).toString());
+                                cell.id = id;
+                                console.log(cell.id);
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2);
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace('"', '');
+                                if(transaction_array[i - 1][j] == "COMPLETE"){
+                                    document.getElementById(id).style.color = "green";
+                                }
+                                else if(transaction_array[i - 1][j] == "PROCESSING"){
+                                    document.getElementById(id).style.color = "blue";
+                                }
+                                else{
+                                    document.getElementById(id).style.color = "red";
+                                }
+                            }
                             cell.innerHTML = transaction_array[i - 1][j];
                         }
                     }
@@ -254,12 +287,45 @@ function load_transactions() {
 
                     for (var i = 1; i <= transaction_array.length; i++) {
                         var newRow = table.insertRow(i);
-                        for (var j = 1; j < 7; j++) {
-                            var cell = newRow.insertCell(j - 1);
-
+                        let id_str = "row";
+                        let id = id_str.concat(i.toString());
+                        newRow.id = id;
+                        document.getElementById(id).style.height = "15px";
+                        for (var j = 2; j < 11; j++) {
+                            var cell = newRow.insertCell(j - 2);
+                            let id_str = "cell";
+                            let id = id_str.concat(i.toString());
+                            id = id.concat((j-2).toString());
+                            cell.id = id;
+                            console.log(cell.id);
+                            document.getElementById(id).style.padding = "5px";
+                            if(j == 9)
+                            {
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2, 21);
+                            }
+                            if(j == 10)
+                            {
+                                id_str = "status_cell";
+                                id = id_str.concat(i.toString());
+                                id = id.concat((j-2).toString());
+                                cell.id = id;
+                                console.log(cell.id);
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2);
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace('"', '');
+                                if(transaction_array[i - 1][j] == "COMPLETE"){
+                                    document.getElementById(id).style.color = "green";
+                                }
+                                else if(transaction_array[i - 1][j] == "PROCESSING"){
+                                    document.getElementById(id).style.color = "blue";
+                                }
+                                else{
+                                    document.getElementById(id).style.color = "red";
+                                }
+                            }
                             cell.innerHTML = transaction_array[i - 1][j];
                         }
                     }
+
 
                     $('#transaction_table').show();
                 }
@@ -314,9 +380,41 @@ function load_transactions() {
 
                     for (var i = 1; i <= transaction_array.length; i++) {
                         var newRow = table.insertRow(i);
-                        for (var j = 1; j < 7; j++) {
-                            var cell = newRow.insertCell(j - 1);
-
+                        let id_str = "row";
+                        let id = id_str.concat(i.toString());
+                        newRow.id = id;
+                        document.getElementById(id).style.height = "15px";
+                        for (var j = 2; j < 11; j++) {
+                            var cell = newRow.insertCell(j - 2);
+                            let id_str = "cell";
+                            let id = id_str.concat(i.toString());
+                            id = id.concat((j-2).toString());
+                            cell.id = id;
+                            console.log(cell.id);
+                            document.getElementById(id).style.padding = "5px";
+                            if(j == 9)
+                            {
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2, 21);
+                            }
+                            if(j == 10)
+                            {
+                                id_str = "status_cell";
+                                id = id_str.concat(i.toString());
+                                id = id.concat((j-2).toString());
+                                cell.id = id;
+                                console.log(cell.id);
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2);
+                                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace('"', '');
+                                if(transaction_array[i - 1][j] == "COMPLETE"){
+                                    document.getElementById(id).style.color = "green";
+                                }
+                                else if(transaction_array[i - 1][j] == "PROCESSING"){
+                                    document.getElementById(id).style.color = "blue";
+                                }
+                                else{
+                                    document.getElementById(id).style.color = "red";
+                                }
+                            }
                             cell.innerHTML = transaction_array[i - 1][j];
                         }
                     }

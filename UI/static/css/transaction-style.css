@@ -114,9 +114,9 @@ table.input[type="text"].second {
 	position: relative;
 	overflow: hidden;
 	
-	width: 70%;
+	width: 80%;
 	max-width: 70%;
-	min-height: 520px;
+	min-height: 580px;
 	z-index: 9;
 }
 
