@@ -1,5 +1,5 @@
 from logging import debug
-from flask import Flask,  render_template,request, session,url_for,jsonify
+from flask import Flask, render_template, request, session, url_for, jsonify
 from pymysql import NULL
 from werkzeug.utils import redirect
 from flask_cors import CORS
@@ -104,4 +104,4 @@ def transactions():
 
     
 if __name__ == "__main__":
-    app.run(port=8001, debug=True)
+    app.run(port=8001, host='0.0.0.0')
