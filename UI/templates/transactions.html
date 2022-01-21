@@ -82,29 +82,93 @@
           </tr>
 
         </table>
-        </br>
         <button id="start_transaction" class="buttonH">Make transaction</button>
-
-        <br><br>
+        <br>
 
         <!--if(transactions.exist)-->
 
         <!--crtaj tabelu-->
         <!--else-->
 
-        <select id="transactionType" class="js-select2" clas="select2" style="width: 200px;"
-          onchange="load_transactions()">
-          <option>All transactions</option>
-          <option>Sent</option>
-          <option>Recieved</option>
-        </select>
+        <div id="sort_filter">
+          <table>
+            <tr>
+              <td>Sender Email</td>
+              <td><input type="text" id="sen" style="width: 200px; height: 30px;"></td>
+              <td>Reciever Email</td>
+              <td><input type="text" id="rec" style="width: 200px; height: 30px;"></td>
+            </tr>
+            <tr>
+              <td>Crypto Currency</td>
+              <td>
+                <select class="js-select2" clas="select2" name="cryptocurr" id="cryptocurr" style="width: 200px;">
+                  <option value=""></option>
+                </select>
+              </td>
+              <td>Status</td>
+              <td>
+                <select class="js-select2" clas="select2" name="stat" id="stat" style="width: 200px;">
+                  <option disabled selected value> -- select status -- </option>
+                  <option></option>
+                  <option>COMPLETE</option>
+                  <option>PROCESSING</option>
+                  <option>DENIED</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Amount between</td>
+              <td><input type="number" name="amoMin" id="amoMin" step="0.00001" min="0.00001"
+                  style="width: 200px; height: 30px;" onchange="changeMessage()" onkeyup="changeMessage()" value="" />
+              </td>
+              <td>and</td>
+              <td><input type="number" name="amoMax" id="amoMax" step="0.00001" min="0.00001"
+                  style="width: 200px; height: 30px;" onchange="changeMessage()" onkeyup="changeMessage()" value="" />
+              </td>
+            </tr>
+          </table>
+          <button id="filter_table" class="buttonH">Filter</button>
+          <br>
+          <a id="clear_filter" style="text-decoration: underline; color: #b40202">Clear Filter</a>
+          <br><br>
+          <select id="transactionType" class="js-select2" clas="select2" style="width: 220px;"
+            onchange="load_transactions()">
+            <option>All transactions</option>
+            <option>Sent</option>
+            <option>Recieved</option>
+          </select>
+
+          <select id="select_sort" class="js-select2" clas="select2" style="width: 220px;"
+            onchange="sort_transactions()">
+            <option disabled selected value> -- select sorting criteria -- </option>
+            <option></option>
+            <option>By Time</option>
+            <option>By Sender Email</option>
+            <option>By Reciever Email</option>
+            <option>By Amount</option>
+            <option>By Crypto Currency</option>
+            <option>By Gas</option>
+            <option>By Total Cost</option>
+            <option>By Status</option>
+          </select>
+
+          <select id="sort_order" class="js-select2" clas="select2" style="width: 220px;"
+            onchange="sort_transactions()">
+            <option disabled selected value> -- select sorting order -- </option>
+            <option></option>
+            <option>Ascending</option>
+            <option>Descending</option>
+          </select>
+        </div>
+
         <br><br>
 
         <label id="table_empty">There are no transactions!</label>
 
 
+
         <table cellspacing="0" cellpadding="0" id="transaction_table" name="currencyTable"
-          style="margin-left: auto;margin-right: auto; width: 100%; overflow-y:scroll; height:220px; display:block;">
+          style="margin-left: auto;margin-right: auto; width: 100%; overflow-y:scroll; height:150px; display:block;">
           <tr>
             <th style="border-bottom: 2px solid black; padding: 5px;">Sender<br>Email</th>
             <th style="border-bottom: 2px solid black; padding: 5px;">Reciever<br>Email</th>
@@ -112,13 +176,11 @@
             <th style="border-bottom: 2px solid black; padding: 5px;">Crypto<br>Currency</th>
             <th style="border-bottom: 2px solid black; padding: 5px;">Value<br>($)</th>
             <th style="border-bottom: 2px solid black; padding: 5px;">Gas</th>
-            <th style="border-bottom: 2px solid black; padding: 5px;">Total<br>Cost ($)</th>
+            <th style="border-bottom: 2px solid black; padding: 5px;">Total<br>Cost</th>
             <th style="border-bottom: 2px solid black; padding: 5px;">Time</th>
             <th style="border-bottom: 2px solid black; padding: 5px;">Status</th>
           </tr>
         </table>
-
-
       </form>
     </div>
   </div>

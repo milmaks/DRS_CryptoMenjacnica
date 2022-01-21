@@ -8,6 +8,7 @@ $(document).ready(function () {
     $('#message').hide();
     $('#table_empty').hide();
     $('#transaction_table').hide();
+    $('#clear_filter').hide();
     load_transactions();
     var crypto_array_temp;
     event.preventDefault();
@@ -90,8 +91,7 @@ function changeMessage() {
         let gas = 0.05 * amount;
         let price = amount + gas;
         let usr = document.cookie.substring(9);
-        if(document.getElementById('reciever_email').value != usr)
-        {
+        if (document.getElementById('reciever_email').value != usr) {
             if (parseFloat(user_crypto_array[document.getElementById('user_cryptocurr').value]) >= amount) {
                 for (let i = 0; i < crypto_array.length; i++) {
                     if (crypto_array[i][0] == document.getElementById('user_cryptocurr').value) {
@@ -109,11 +109,11 @@ function changeMessage() {
                 approveTransaction = false;
             }
         }
-        else{
+        else {
             document.getElementById('message').innerHTML = "WARNING: You cannot make transactions to yourself";
-                approveTransaction = false;
+            approveTransaction = false;
         }
-        
+
     }
     else {
         document.getElementById('message').innerHTML = "";
@@ -142,6 +142,55 @@ $(document).ready(function () {
                 }
             });
         }
+    });
+
+    $('#filter_table').click(function(){
+        event.preventDefault();
+        let senderMail = document.getElementById('sen').value;
+        let recieverMail = document.getElementById('rec').value;
+        let currency = document.getElementById('cryptocurr').value;
+        let status = document.getElementById('stat').value;
+        let amoMin = document.getElementById('amoMin').value;
+        let amoMax = document.getElementById('amoMax').value;
+        let minAmount = 0;
+        let maxAmount = 0;
+        if(amoMin != "")
+            minAmount = parseFloat(amoMin);
+        else
+            minAMount = Number.MIN_VALUE;
+        if(amoMax != "")
+            maxAmount = parseFloat(amoMax);
+        else
+            maxAmount = Number.MAX_VALUE;
+        var res_array = new Array();
+        // zapamti niz transakcija
+        var temp_array = transaction_array;
+
+        res_array = transaction_array.filter(transaction => transaction[2].includes(senderMail) && transaction[3].includes(recieverMail) &&
+                                                transaction[5].includes(currency) && transaction[10].includes(status) && parseFloat(transaction[4]) > minAMount && parseFloat(transaction[4]) < maxAmount);
+
+        // ubaci niz filtriranih u niz transakcija za ispis
+        transaction_array = res_array;
+
+        print_table();
+        // vrati niz transakcija u prvobitno stanje
+        transaction_array = temp_array;
+
+        
+        $('#clear_filter').show();
+
+    });
+
+    $('#clear_filter').click(function(){
+        event.preventDefault();
+        print_table();
+        document.getElementById('sen').value = "";
+        document.getElementById('rec').value = "";
+        document.getElementById('cryptocurr').value = "";
+        document.getElementById('stat').value = "";
+        document.getElementById('amoMin').value = "";
+        document.getElementById('amoMax').value = "";
+        $('#clear_filter').hide();
     });
 });
 
@@ -189,50 +238,9 @@ function load_transactions() {
                             }
                         }
                     }
-                    $('#transaction_table tr:not(:first)').remove();
-                    
-                    for (var i = 1; i <= transaction_array.length; i++) {
-                        var newRow = table.insertRow(i);
-                        let id_str = "row";
-                        let id = id_str.concat(i.toString());
-                        newRow.id = id;
-                        document.getElementById(id).style.height = "15px";
-                        for (var j = 2; j < 11; j++) {
-                            var cell = newRow.insertCell(j - 2);
-                            let id_str = "cell";
-                            let id = id_str.concat(i.toString());
-                            id = id.concat((j-2).toString());
-                            cell.id = id;
-                            console.log(cell.id);
-                            document.getElementById(id).style.padding = "5px";
-                            if(j == 9)
-                            {
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2, 21);
-                            }
-                            if(j == 10)
-                            {
-                                id_str = "status_cell";
-                                id = id_str.concat(i.toString());
-                                id = id.concat((j-2).toString());
-                                cell.id = id;
-                                console.log(cell.id);
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2);
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace('"', '');
-                                if(transaction_array[i - 1][j] == "COMPLETE"){
-                                    document.getElementById(id).style.color = "green";
-                                }
-                                else if(transaction_array[i - 1][j] == "PROCESSING"){
-                                    document.getElementById(id).style.color = "blue";
-                                }
-                                else{
-                                    document.getElementById(id).style.color = "red";
-                                }
-                            }
-                            cell.innerHTML = transaction_array[i - 1][j];
-                        }
-                    }
 
-                    $('#transaction_table').show();
+                    print_table();
+
                 }
 
                 //console.log(response);
@@ -283,51 +291,9 @@ function load_transactions() {
                             }
                         }
                     }
-                    $('#transaction_table tr:not(:first)').remove();
 
-                    for (var i = 1; i <= transaction_array.length; i++) {
-                        var newRow = table.insertRow(i);
-                        let id_str = "row";
-                        let id = id_str.concat(i.toString());
-                        newRow.id = id;
-                        document.getElementById(id).style.height = "15px";
-                        for (var j = 2; j < 11; j++) {
-                            var cell = newRow.insertCell(j - 2);
-                            let id_str = "cell";
-                            let id = id_str.concat(i.toString());
-                            id = id.concat((j-2).toString());
-                            cell.id = id;
-                            console.log(cell.id);
-                            document.getElementById(id).style.padding = "5px";
-                            if(j == 9)
-                            {
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2, 21);
-                            }
-                            if(j == 10)
-                            {
-                                id_str = "status_cell";
-                                id = id_str.concat(i.toString());
-                                id = id.concat((j-2).toString());
-                                cell.id = id;
-                                console.log(cell.id);
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2);
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace('"', '');
-                                if(transaction_array[i - 1][j] == "COMPLETE"){
-                                    document.getElementById(id).style.color = "green";
-                                }
-                                else if(transaction_array[i - 1][j] == "PROCESSING"){
-                                    document.getElementById(id).style.color = "blue";
-                                }
-                                else{
-                                    document.getElementById(id).style.color = "red";
-                                }
-                            }
-                            cell.innerHTML = transaction_array[i - 1][j];
-                        }
-                    }
+                    print_table();
 
-
-                    $('#transaction_table').show();
                 }
 
             },
@@ -376,50 +342,9 @@ function load_transactions() {
                             }
                         }
                     }
-                    $('#transaction_table tr:not(:first)').remove();
 
-                    for (var i = 1; i <= transaction_array.length; i++) {
-                        var newRow = table.insertRow(i);
-                        let id_str = "row";
-                        let id = id_str.concat(i.toString());
-                        newRow.id = id;
-                        document.getElementById(id).style.height = "15px";
-                        for (var j = 2; j < 11; j++) {
-                            var cell = newRow.insertCell(j - 2);
-                            let id_str = "cell";
-                            let id = id_str.concat(i.toString());
-                            id = id.concat((j-2).toString());
-                            cell.id = id;
-                            console.log(cell.id);
-                            document.getElementById(id).style.padding = "5px";
-                            if(j == 9)
-                            {
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2, 21);
-                            }
-                            if(j == 10)
-                            {
-                                id_str = "status_cell";
-                                id = id_str.concat(i.toString());
-                                id = id.concat((j-2).toString());
-                                cell.id = id;
-                                console.log(cell.id);
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].substring(2);
-                                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace('"', '');
-                                if(transaction_array[i - 1][j] == "COMPLETE"){
-                                    document.getElementById(id).style.color = "green";
-                                }
-                                else if(transaction_array[i - 1][j] == "PROCESSING"){
-                                    document.getElementById(id).style.color = "blue";
-                                }
-                                else{
-                                    document.getElementById(id).style.color = "red";
-                                }
-                            }
-                            cell.innerHTML = transaction_array[i - 1][j];
-                        }
-                    }
+                    print_table();
 
-                    $('#transaction_table').show();
                 }
 
             },
@@ -428,4 +353,143 @@ function load_transactions() {
             }
         });
     }
+}
+
+function sort_transactions() {
+    let sort_type = document.getElementById("select_sort").value;
+    let order = document.getElementById("sort_order").value;
+
+
+    if (sort_type == "By Time") {
+        j = 9;
+    }
+    else if (sort_type == "By Sender Email") {
+        j = 2;
+    }
+    else if (sort_type == "By Reciever Email") {
+        j = 3;
+    }
+    else if (sort_type == "By Amount") {
+        j = 4;
+    }
+    else if (sort_type == "By Crypto Currency") {
+        j = 5;
+    }
+    else if (sort_type == "By Gas") {
+        j = 7;
+    }
+    else if (sort_type == "By Total Cost") {
+        j = 8;
+    }
+    else if (sort_type == "By Status") {
+        j = 10;
+    }
+
+    let n = transaction_array.length;
+
+    if (order == "Ascending") {
+        for (let i = 0; i < n; i++) {
+            let min = i;
+            for (let k = i + 1; k < n; k++) {
+                if (j == 4 || j == 7 || j == 8)
+                {
+                    if (parseFloat(transaction_array[k][j]) < parseFloat(transaction_array[min][j])) {
+                        min = k;
+                    }
+                }
+                else{
+                    if (transaction_array[k][j] < transaction_array[min][j]) {
+                        min = k;
+                    }
+                }
+            }
+            if (min != i) {
+                let tmp = transaction_array[i];
+                transaction_array[i] = transaction_array[min];
+                transaction_array[min] = tmp;
+            }
+        }
+    }
+    else{
+        for (let i = 0; i < n; i++) {
+            let min = i;
+            for (let k = i + 1; k < n; k++) {
+                if (j == 4 || j == 7 || j == 8)
+                {
+                    if (parseFloat(transaction_array[k][j]) > parseFloat(transaction_array[min][j])) {
+                        min = k;
+                    }
+                }
+                else{
+                    if (transaction_array[k][j] > transaction_array[min][j]) {
+                        min = k;
+                    }
+                }
+            }
+            if (min != i) {
+                let tmp = transaction_array[i];
+                transaction_array[i] = transaction_array[min];
+                transaction_array[min] = tmp;
+            }
+        }
+    }
+
+
+    print_table();
+
+}
+
+function print_table() {
+    var table = document.getElementById("transaction_table");
+
+    $('#transaction_table tr:not(:first)').remove();
+
+    for (var i = 1; i <= transaction_array.length; i++) {
+        var newRow = table.insertRow(i);
+        let id_str = "row";
+        let id = id_str.concat(i.toString());
+        newRow.id = id;
+        document.getElementById(id).style.height = "15px";
+        for (var j = 2; j < 11; j++) {
+            var cell = newRow.insertCell(j - 2);
+            let id_str = "cell";
+            let id = id_str.concat(i.toString());
+            id = id.concat((j - 2).toString());
+            cell.id = id;
+            console.log(cell.id);
+            document.getElementById(id).style.padding = "5px";
+            if (j == 9) {
+                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace(' "', '');
+                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace('"', '');
+            }
+            if (j == 10) {
+                id_str = "status_cell";
+                id = id_str.concat(i.toString());
+                id = id.concat((j - 2).toString());
+                cell.id = id;
+                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace(' "', '');
+                transaction_array[i - 1][j] = transaction_array[i - 1][j].replace('"', '');
+                if (transaction_array[i - 1][j] == "COMPLETE") {
+                    document.getElementById(id).style.color = "green";
+                }
+                else if (transaction_array[i - 1][j] == "PROCESSING") {
+                    document.getElementById(id).style.color = "blue";
+                }
+                else {
+                    document.getElementById(id).style.color = "red";
+                }
+            }
+            cell.innerHTML = transaction_array[i - 1][j];
+        }
+    }
+
+    if(transaction_array.length == 0){
+        $('#transaction_table').hide();
+        $('#table_empty').show();
+    }
+    else{
+        $('#table_empty').hide();
+        $('#transaction_table').show();
+    }
+
 }
