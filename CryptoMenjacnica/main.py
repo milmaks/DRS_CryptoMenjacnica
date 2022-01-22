@@ -333,7 +333,7 @@ def make_transaction():
             transactions_database.add_transaction(hashValue, _sender_email, _reciever_email, _amount, _crypto_currency, _current_value, _gas, state, cursor, conn)
 
 
-            thread = threading.Thread(target=validate_blockchain, args=(hashValue, _sender_email, _reciever_email, _amount, _crypto_currency, _current_value, _gas, cursor, conn))
+            thread = threading.Thread(target=validate_blockchain, args=(hashValue, _sender_email, _reciever_email, _amount, _crypto_currency, _current_value, _gas, emailCheck, cursor, conn))
             
             thread.start()
             
@@ -419,7 +419,7 @@ def update_currencies():
         sleep(20)
 
 
-def validate_blockchain(hashValue, sender_email, reciever_email, amount, crypto_currency, current_value, gas, cursor, conn):
+def validate_blockchain(hashValue, sender_email, reciever_email, amount, crypto_currency, current_value, gas, emailCheck, cursor, conn):
     state = TransactionState.COMPLETE
     threadID = threading.get_ident()
     counter = 0
@@ -438,6 +438,8 @@ def validate_blockchain(hashValue, sender_email, reciever_email, amount, crypto_
             sleep(0.05)
 
     if float(currencyAmount) < float(amount) + gas:
+        state = TransactionState.DENIED
+    elif emailCheck[8] == 0:
         state = TransactionState.DENIED
     else:
         state = TransactionState.COMPLETE
