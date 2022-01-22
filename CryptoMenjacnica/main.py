@@ -291,7 +291,11 @@ def get_all_user_currrency():
         conn = mysql.connect()
         cursor = conn.cursor()
 
-        data = costumer_currency_database.retrive_all_currency_of_costumer(cookie, cursor, conn)
+        c = costumers_database.get_costumer(cursor, cookie)
+        if c[8] == True:    
+            data = costumer_currency_database.retrive_all_currency_of_costumer(cookie, cursor, conn)
+        else:
+            data = False
 
         return {"json_c" : data}
 

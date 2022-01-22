@@ -74,6 +74,12 @@
                                 <td>{{crypto_list[n]}}</td>
                             </tr>
                         {% endif %}
+                        {% if crypto_list[n] == 'NULL'%}
+                        <tr>
+                            <td>{{n}}</td>
+                            <td>0</td>
+                        </tr>
+                    {% endif %}
                     {% endfor %}
         </div> 
     </div>
