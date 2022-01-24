@@ -3,7 +3,7 @@ import yaml
 import threading
 from crypto_currency_enum import CurrencyType
 
-db = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
+db = yaml.safe_load(open("yamls/db.yaml"))
 
 
 class CostumerCryptoCurrencyTable:
@@ -11,6 +11,7 @@ class CostumerCryptoCurrencyTable:
         self.lock = threading.Lock()
         costumer_crypto_currency_db = mysql.connector.connect(
             host=db["mysql_host"],
+            port = int(db["mysql_port"]),
             user=db["mysql_user"],
             password=db["mysql_password"],
             database=db["mysql_db"]

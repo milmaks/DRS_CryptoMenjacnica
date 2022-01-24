@@ -6,7 +6,7 @@ from datetime import datetime
 
 from transaction_state_enum import TransactionState
 
-db = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
+db = yaml.safe_load(open("yamls/db.yaml"))
 
 class TransactionTable:
     def __init__(self):
@@ -14,6 +14,7 @@ class TransactionTable:
         transactions_db = mysql.connector.connect(
             host=db["mysql_host"],
             user=db["mysql_user"],
+            port = int(db["mysql_port"]),
             password=db["mysql_password"],
             database=db["mysql_db"]
         )

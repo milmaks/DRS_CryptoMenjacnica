@@ -9,6 +9,8 @@ RUN pip3 install -r requirements.txt
 COPY . .
 
 # Start app
-EXPOSE 8001
-#ENTRYPOINT ["python", "main.py"]
-CMD ["python", "main.py"]
+#EXPOSE 8001
+#ENTRYPOINT ["python", "app.py"]
+#CMD ["python", "app.py"]
+ENTRYPOINT ["python"]
+CMD ["app.py"]

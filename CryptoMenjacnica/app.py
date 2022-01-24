@@ -1,4 +1,4 @@
-from asyncio.windows_events import NULL
+#from asyncio.windows_events import NULL
 from os import truncate
 from pickle import NONE
 from random import triangular
@@ -6,7 +6,7 @@ import re
 from urllib import response
 from flask import Flask, jsonify, request, render_template, url_for, redirect,session
 from flask.helpers import make_response
-from pymysql import cursors
+#from pymysql import cursors
 from werkzeug.security import generate_password_hash, check_password_hash
 from costumer_currency_db import CostumerCryptoCurrencyTable
 from model.Customer import Customer, CustomerSchema
@@ -27,6 +27,7 @@ from transaction_state_enum import TransactionState
 from Crypto.Hash import keccak
 import random
 import threading
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -45,6 +46,7 @@ app.config['MYSQL_DATABASE_USER'] = db_yaml["mysql_user"]
 app.config['MYSQL_DATABASE_PASSWORD'] = db_yaml["mysql_password"]
 app.config['MYSQL_DATABASE_DB'] = db_yaml["mysql_db"]
 app.config['MYSQL_DATABASE_HOST'] = db_yaml["mysql_host"]
+app.config['MYSQL_DATABASE_PORT'] = int(db_yaml["mysql_port"])
 mysql.init_app(app)
 
 
@@ -483,4 +485,5 @@ def calculate_hash(sender_email, reciever_email, amount):
 if __name__ == "__main__":
     update_proces = Process(target=update_currencies, args=())
     update_proces.start()
-    app.run(port=8000, debug=True)
+    port = int(os.environ.get('PORT', 8000))
+    app.run(host = '0.0.0.0', port=port)

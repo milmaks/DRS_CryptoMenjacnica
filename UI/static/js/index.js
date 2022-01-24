@@ -1,10 +1,11 @@
 var crypto_array;
+var endpoint = "https://cryptomenjacnicaengine.herokuapp.com"; //"127.0.0.1:8000"
 
 $(document).ready(function() {
 
     event.preventDefault();
     $.ajax({
-        url: 'http://127.0.0.1:8000/currency/getall',
+        url: endpoint + '/currency/getall',
         type: 'GET',
         success: function(response){
             
@@ -70,7 +71,7 @@ $(document).ready(function() {
 
 function periodicMethod(){
     $.ajax({
-        url: 'http://127.0.0.1:8000/currency/getall',
+        url: endpoint + '/currency/getall',
         type: 'GET',
         success: function(response){
             

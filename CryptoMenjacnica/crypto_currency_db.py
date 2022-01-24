@@ -1,7 +1,7 @@
 import mysql.connector
 import yaml
 
-db = yaml.safe_load(open("CryptoMenjacnica/yamls/db.yaml"))
+db = yaml.safe_load(open("yamls/db.yaml"))
 
 
 # to do: treba promeniti tabelu da odgovar acuvanju valuta
@@ -10,6 +10,7 @@ class CryptoCurrencyTable:
         crypto_currency_db = mysql.connector.connect(
             host=db["mysql_host"],
             user=db["mysql_user"],
+            port = int(db["mysql_port"]),
             password=db["mysql_password"],
             database=db["mysql_db"]
         )
