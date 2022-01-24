@@ -45,6 +45,7 @@ app.config['MYSQL_DATABASE_USER'] = db_yaml["mysql_user"]
 app.config['MYSQL_DATABASE_PASSWORD'] = db_yaml["mysql_password"]
 app.config['MYSQL_DATABASE_DB'] = db_yaml["mysql_db"]
 app.config['MYSQL_DATABASE_HOST'] = db_yaml["mysql_host"]
+app.config['MYSQL_DATABASE_PORT'] = int(db_yaml["mysql_port"])
 mysql.init_app(app)
 
 
