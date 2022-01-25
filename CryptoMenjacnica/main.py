@@ -301,6 +301,18 @@ def get_all_user_currrency():
         return {"json_c" : data}
 
 
+@app.route('/getUser', methods=['POST'])
+def get_user():
+    if request.method == 'POST':
+        cookie = request.form['username']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        c = costumers_database.get_costumer(cursor, cookie)
+        
+        return {"user" : c}
+
 @app.route("/makeTransaction", methods=['POST'])
 def make_transaction():
     if request.method == 'POST':

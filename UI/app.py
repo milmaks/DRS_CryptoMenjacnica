@@ -10,7 +10,7 @@ import os
 app = Flask(__name__)
 CORS(app,supports_credinentails=True)
 
-endpoint = "https://cryptomenjacnicaengine.herokuapp.com"; #"127.0.0.1:8000"
+endpoint = "https://cryptomenjacnicaengine.herokuapp.com" #"127.0.0.1:8000" 
 
 @app.route('/')
 def main_data():            
@@ -45,9 +45,22 @@ def change():
     if request.method == 'GET':
         if 'username' in request.cookies:
             user_cookie = request.cookies.get('username')
-            return render_template('changeCostumer.html', user_cookie = user_cookie)
-        else:
-            return redirect('/logIn')
+
+        url = endpoint + "/getUser"
+        if 'username' in request.cookies:
+            user_cookie = request.cookies.get('username')
+    
+        data = {"username" : user_cookie}
+        response = requests.post(url, data = data)
+
+        json_text = response.text
+
+        user_json = json.JSONDecoder().decode(json_text)
+        user = user_json['user']
+
+        return render_template('changeCostumer.html', user_cookie = user_cookie, user = user)
+    else:
+        return redirect('/logIn')
     
 @app.route('/buyCrypto', methods=['GET', 'POST'])
 def buy_crypto():

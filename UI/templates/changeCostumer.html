@@ -48,28 +48,28 @@
                 <table style="width:100%">
                     <tr style="width:100%">
                         <td style="align-items:left;justify-content: left;">
-                            <input type="text" class="first" placeholder="First name" name="first_name" required minlength="2" maxlength="32"/>
+                            <input type="text" class="first" value="{{user[0]}}" name="first_name" required minlength="2" maxlength="32"/>
                         </td style="align-items:right">
                         <td>
-                            <input type="text" class="second" placeholder="Last name" name="last_name" required minlength="2" maxlength="32"/>
+                            <input type="text" class="second" value="{{user[1]}}" name="last_name" required minlength="2" maxlength="32"/>
                         </td>
                     </tr>
                     <tr>
                         <td colspan=2>
-                            <input type="text" placeholder="Home address" name="address" required/>
+                            <input type="text" value="{{user[2]}}" name="address" required/>
                         </td>
                     </tr>
                     <tr style="width:100%">
                         <td style="align-items:left;justify-content: left;">
-                            <input type="text" class="first" placeholder="City" name="town" required/>
+                            <input type="text" class="first" value="{{user[3]}}" name="town" required/>
                         </td style="align-items:right">
                         <td>
-                            <input type="text" class="second" placeholder="Country" name="country" required/>
+                            <input type="text" class="second" value="{{user[4]}}" name="country" required/>
                         </td>
                     </tr>
                     <tr>
                         <td colspan=2>
-                            <input type="text" placeholder="Phone number" name="phone_number" required/>
+                            <input type="text" value="{{user[5]}}" name="phone_number" required/>
                         </td>
                     </tr>
                     <tr>

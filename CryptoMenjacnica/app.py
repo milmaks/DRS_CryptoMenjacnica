@@ -156,12 +156,6 @@ def verify():
             conn.close()
             return {'data' : 'ok' ,'redirect' : '/buyCrypto'},200
 
-        
-    
-    
-    
-    
-
 
 @app.route('/change', methods=['POST', 'GET'])
 def change():
@@ -300,6 +294,19 @@ def get_all_user_currrency():
             data = False
 
         return {"json_c" : data}
+
+
+@app.route('/getUser', methods=['POST'])
+def get_user():
+    if request.method == 'POST':
+        cookie = request.form['username']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        c = costumers_database.get_costumer(cursor, cookie)
+        
+        return {"user" : c}
 
 
 @app.route("/makeTransaction", methods=['POST'])
