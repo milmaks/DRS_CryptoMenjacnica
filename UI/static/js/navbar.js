@@ -9,7 +9,7 @@ function loadBuyCrypto(){
 
     event.preventDefault();
     $.ajax({
-        url: 'http://127.0.0.1:8000/currency/getall',
+        url: endpoint + '/currency/getall',
         data: {'cookie' : document.cookie},
         type: 'POST',
         success: function(response){  
@@ -25,7 +25,7 @@ function loadBuyCrypto(){
 function loadTradeCrypto(){
     event.preventDefault();
     $.ajax({
-        url: 'http://127.0.0.1:8000/currency/getall',
+        url: endpoint + '/currency/getall',
         data: {'cookie' : document.cookie},
         type: 'POST',
         success: function(response){  

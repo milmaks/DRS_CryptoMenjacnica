@@ -6,7 +6,7 @@ $(document).ready(function() {
     var crypto_array_temp;
     event.preventDefault();
     $.ajax({
-        url: 'http://127.0.0.1:8000/currency/getall',
+        url: endpoint + '/currency/getall',
         data: {'cookie' : document.cookie},
         type: 'POST',
         success: function(response){ 
@@ -40,7 +40,7 @@ $(document).ready(function() {
             crypto_array_temp = crypto_array;
 
             $.ajax({
-                url: 'http://127.0.0.1:8000/getUserCrypto',
+                url: endpoint + '/getUserCrypto',
                 data: document.cookie,
                 type: 'POST',
                 success: function(response){
@@ -121,7 +121,7 @@ $(document).ready(function(){
         if(tradeAvailabe)
         {
             $.ajax({
-                url: 'http://127.0.0.1:8000/tradeCrypto',
+                url: endpoint + '/tradeCrypto',
                 data: $('#tradeCrypto_form').serialize() + '&' + document.cookie + '&valueOfTrade=' + valueOfTrade,
                 type: 'POST',
                 success: function(response){

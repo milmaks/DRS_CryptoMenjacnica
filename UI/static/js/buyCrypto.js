@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     event.preventDefault();
     $.ajax({
-        url: 'http://127.0.0.1:8000/currency/getall',
+        url: endpoint + '/currency/getall',
         data: {'cookie' : document.cookie},
         type: 'POST',
         success: function(response){
@@ -93,7 +93,7 @@ $(document).ready(function(){
         }
 
 		$.ajax({
-			url: 'http://127.0.0.1:8000/buyCrypto',
+			url: endpoint + '/buyCrypto',
 			data: $('#buyCrypto_form').serialize()+ '&' + document.cookie,
 			type: 'POST',
 			success: function(response){

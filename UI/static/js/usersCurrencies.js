@@ -1,7 +1,7 @@
 $(document).ready(function() {
     event.preventDefault();
     $.ajax({
-        url: 'http://127.0.0.1:8000/getUserCrypto',
+        url: endpoint + '/getUserCrypto',
         data: {'cookie' : document.cookie},
         type: 'GET',
         success: function(response){

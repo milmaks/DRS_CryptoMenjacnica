@@ -17,7 +17,7 @@ $(document).ready(function(){
 	$('#login').click(function(){
 		event.preventDefault();
 		$.ajax({
-			url: 'http://127.0.0.1:8000/logIn',
+			url: endpoint + '/logIn',
 			data: $('#log_form').serialize(),
 			type: 'POST',
 			success: function(response){

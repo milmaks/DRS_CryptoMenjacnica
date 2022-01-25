@@ -14,7 +14,7 @@ $(document).ready(function(){
 	$('#butn').click(function(){
 		event.preventDefault();
 		$.ajax({
-			url: 'http://127.0.0.1:8000/register',
+			url: endpoint + '/register',
 			data: $('#signup_form').serialize(),
 			type: 'POST',
 			success: function(response){
