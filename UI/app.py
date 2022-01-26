@@ -96,7 +96,10 @@ def crypto_state():
     cryptos = json.JSONDecoder().decode(json_text)
     crypto_lsit = cryptos['json_c']
 
-    return render_template('cryptoState.html', crypto_list = crypto_lsit, username = user_cookie)
+    if crypto_lsit == False:
+        return render_template('index.html')
+    else:
+        return render_template('cryptoState.html', crypto_list = crypto_lsit, username = user_cookie)
 
 @app.route('/transactions', methods=['GET', 'POST'])
 def transactions():
